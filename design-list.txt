@@ -1,20 +1,29 @@
 GameBoard<MODULE>
 - _GRID_SIZE: int
-- boardElements: BoardElement[]
+- elements: BoardElement[]
 - _initializeArray: func
-return array
+return elements
 
 BoardElement<FACTORY>
-- row: int
-- col: int
-- played: bool
-- content: X,O, or empty
-- getter/setter for played and content
-- getter for row and col
+- _row: int
+- _col: int
+- _played: bool
+- _content: X,O, or empty
+- getRow: func
+- getCol: func
+- setPlayed: func
+- getPlayed: func
+- setContent: func
+- getContent: func
 
-players<FACTORY>
-- name: string
-- isMarkTypeX: bool
+Player<FACTORY>
+- _name: string
+- _markType: X or O
+- _isPlayerTurn: bool
+- getName: func
+- setIsPlayerTurn: func
+- getIsPlayerTurn: func
+- getMarkType: func
 
 renderer<MODULE>
 - _body: body
@@ -28,8 +37,14 @@ renderer<MODULE>
     -append to _container
     -eventListener
 - updateBoardElement: func
-- resetBoard: func
+- clearAllContent: func
 - displayWinner: func
+- displayTie: func
 - toggleDarkMode: func
 
-game controller<MODULE>
+GameController<MODULE>
+- _checkForFullBoard: func
+- checkForWinner: func
+- _checkForTie: func
+- resetGame: func
+- _changePlayerTurn: func
