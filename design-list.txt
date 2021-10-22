@@ -1,0 +1,13 @@
+game board<MOD>
+
+
+board element<FACT>
+
+
+players<FACT>
+
+
+renderer<MOD>
+
+
+game controller<MOD>
