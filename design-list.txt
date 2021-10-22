@@ -9,9 +9,12 @@ BoardElement<FACTORY>
 - col: int
 - played: bool
 - content: X,O, or empty
+- getter/setter for played and content
+- getter for row and col
 
 players<FACTORY>
-
+- name: string
+- markTypeX: bool
 
 renderer<MODULE>
 
