@@ -1,5 +1,8 @@
 GameBoard<MODULE>
-
+- GRID_SIZE: int
+- boardElements: BoardElement[]
+- initializeArray: func
+return array
 
 BoardElement<FACTORY>
 - row: int
