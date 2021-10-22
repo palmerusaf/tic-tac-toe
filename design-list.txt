@@ -1,13 +1,16 @@
-game board<MOD>
+GameBoard<MODULE>
 
 
-board element<FACT>
+BoardElement<FACTORY>
+- row: int
+- col: int
+- played: bool
+- content: X,O, or empty
+
+players<FACTORY>
 
 
-players<FACT>
+renderer<MODULE>
 
 
-renderer<MOD>
-
-
-game controller<MOD>
+game controller<MODULE>
