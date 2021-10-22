@@ -1,7 +1,7 @@
 GameBoard<MODULE>
-- GRID_SIZE: int
+- _GRID_SIZE: int
 - boardElements: BoardElement[]
-- initializeArray: func
+- _initializeArray: func
 return array
 
 BoardElement<FACTORY>
@@ -14,9 +14,22 @@ BoardElement<FACTORY>
 
 players<FACTORY>
 - name: string
-- markTypeX: bool
+- isMarkTypeX: bool
 
 renderer<MODULE>
-
+- _body: body
+- _container: div
+- _initContainer: func
+    -class: board
+- _initElements: func
+    -data-row: int
+    -data-col: int
+    -class: board__elements
+    -append to _container
+    -eventListener
+- updateBoardElement: func
+- resetBoard: func
+- displayWinner: func
+- toggleDarkMode: func
 
 game controller<MODULE>
