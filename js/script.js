@@ -17,4 +17,11 @@ const BoardCell = function (rowIndex, columnIndex) {
     _isPlayed = true;
   };
   const getPlayersMark = () => _playersMark;
+  return {
+    getRowIndex,
+    getColumnIndex,
+    getIsPlayed,
+    setPlayersMark,
+    getPlayersMark,
+  };
 };
