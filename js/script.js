@@ -16,6 +16,10 @@ const BoardCell = function (rowIndex, columnIndex) {
     _playersMark = mark;
     _isPlayed = true;
   };
+  const resetCell = function () {
+    _isPlayed = false;
+    _playersMark = "";
+  };
   const getPlayersMark = () => _playersMark;
   return {
     getRowIndex,
@@ -23,5 +27,21 @@ const BoardCell = function (rowIndex, columnIndex) {
     getIsPlayed,
     setPlayersMark,
     getPlayersMark,
+    resetCell,
   };
 };
+// BoardCell tests
+/*
+const nc = BoardCell(0, 1);
+console.log(nc.getRowIndex());
+console.log(nc.getColumnIndex());
+console.log(nc.getIsPlayed());
+console.log(nc.setPlayersMark("z"));
+console.log(nc.setPlayersMark("X"));
+console.log(nc.getIsPlayed());
+console.log(nc.getPlayersMark());
+console.log(nc.setPlayersMark("O"));
+console.log(nc.resetCell());
+console.log(nc.getIsPlayed());
+console.log(nc.getPlayersMark());
+//*/
