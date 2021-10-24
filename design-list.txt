@@ -1,0 +1,61 @@
+BoardCell<FACTORY>
+- _row: int
+- _col: int
+- _played: bool
+- _content: X,O, or empty
+- getRowIndexNumber: func
+- getColIndexNumber: func
+- setPlayed: func
+- getPlayed: func
+- setContent: func
+- getContent: func
+
+GameBoard<MODULE>
+- _GRID_SIZE: int
+- Cells: BoardCell[]
+- _initializeArray: func return BoardCell[]
+- getRowOfCells: func return BoardCell.getContent[]
+- getColumnOfCells: func return BoardCell.getContent[]
+- isCellInForwardDiagonal: func return bool
+- isCellInBackDiagonal: func return bool
+- getForwardDiagonalOfCells: func return BoardCell.getContent[]
+- getBackDiagonalOfCells: func return BoardCell.getContent[]
+
+Renderer<MODULE>
+- _body: body
+- _container: div
+- _initContainer: func
+    -class: board
+- _initCells: func
+    -data-row: int
+    -data-col: int
+    -class: board__cells
+    -append to _container
+    -eventListener
+- highlightActivePlayer: func
+- displayMark: func
+- eraseAllMarks: func
+- displayWinner: func
+- displayTie: func
+- toggleDarkMode: func
+
+Player<FACTORY>
+- _name: string
+- _markType: X or O
+- _isPlayerTurn: bool
+- _isWinner: bool
+- getName: func
+- setIsPlayerTurn: func
+- getIsPlayerTurn: func
+- getMarkType: func
+- setIsWinner: func
+- getIsWinner: func
+
+GameController<MODULE>
+- _initPlayers
+- _checkForFullBoard: func
+- checkForWinner: func return bool
+- _isThreeMatches: func return bool
+- _checkForTie: func
+- resetGame: func
+- _changePlayerTurn: func
