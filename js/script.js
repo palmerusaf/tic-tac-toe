@@ -45,3 +45,18 @@ console.log(nc.resetCell());
 console.log(nc.getIsPlayed());
 console.log(nc.getPlayersMark());
 //*/
+
+//gameboard module handles all gameboard data and initialization
+const GameBoard = (() => {
+  const _GRID_SIZE = 3;
+  let cells = [];
+  const _initCellArray = () => {
+    for (let rowIndex = 0; rowIndex < _GRID_SIZE; rowIndex++)
+      for (let columnIndex = 0; columnIndex < _GRID_SIZE; ++columnIndex)
+        cells.push(BoardCell(rowIndex, columnIndex));
+        return cells;
+  };
+  cells = _initCellArray();
+return {cells};
+})();
+console.log(GameBoard.cells);
