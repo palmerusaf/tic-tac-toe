@@ -1,16 +1,22 @@
 GameBoard<MODULE>
 - _GRID_SIZE: int
-- elements: BoardElement[]
-- _initializeArray: func
-return elements
+- Cells: BoardCell[]
+- _initializeArray: func return BoardCell[]
+- getRowOfCells: func return BoardCell.getContent[]
+- getColumnOfCells: func return BoardCell.getContent[]
+- isCellInForwardDiagonal: bool
+- isCellInBackDiagonal: bool
+- getForwardDiagonalOfCells: func return BoardCell.getContent[]
+- getBackDiagonalOfCells: func return BoardCell.getContent[]
 
-BoardElement<FACTORY>
+
+BoardCell<FACTORY>
 - _row: int
 - _col: int
 - _played: bool
 - _content: X,O, or empty
-- getRow: func
-- getCol: func
+- getRowIndexNumber: func
+- getColIndexNumber: func
 - setPlayed: func
 - getPlayed: func
 - setContent: func
@@ -30,13 +36,13 @@ renderer<MODULE>
 - _container: div
 - _initContainer: func
     -class: board
-- _initElements: func
+- _initCells: func
     -data-row: int
     -data-col: int
-    -class: board__elements
+    -class: board__cells
     -append to _container
     -eventListener
-- updateBoardElement: func
+- updateBoardCell: func
 - clearAllContent: func
 - displayWinner: func
 - displayTie: func
@@ -44,7 +50,8 @@ renderer<MODULE>
 
 GameController<MODULE>
 - _checkForFullBoard: func
-- checkForWinner: func
+- checkForWinner: func return bool
+- _isThreeMatches: func return bool
 - _checkForTie: func
 - resetGame: func
 - _changePlayerTurn: func
