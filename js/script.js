@@ -72,11 +72,25 @@ const GameBoard = (() => {
   const getCellContent = (rowIndex, columnIndex) =>
     _getCell(rowIndex, columnIndex).getContent();
 
+  const _getArrayContent = (array) => array.map(cell.getContent());
+  const getRowContent = (rowIndex) => {
+    const row = cells.filter((cell) => cell.getRowIndex() === rowIndex);
+    return _getArrayContent(row);
+  };
+   const getColumnContent=(columnIndex) => {
+    const column = cells.filter((cell) => cell.getRowIndex() === columnIndex);
+    return _getArrayContent(column);
+  };;
   const isCellInBackDiagonal = (rowIndex, columnIndex) =>
     rowIndex === columnIndex;
 
   const isCellInForwardDiagonal = (rowIndex, columnIndex) =>
     rowIndex + columnIndex === _GRID_SIZE - 1;
+<<<<<<< Updated upstream
+=======
+  // const getForwardDiagonalContent;
+  // const getBackDiagonalContent;
+>>>>>>> Stashed changes
 
   const resetArray = () => {
     _cells.forEach((cell) => cell.resetCell());
@@ -99,10 +113,10 @@ const GameBoard = (() => {
   GameBoard.resetArray();
   GameBoard.cells.forEach((cell) => console.log(cell.getIsPlayed()));
   //*/
-  /*
+  //*
   console.log("getRowContent tests"); /*
   //*/
-  /*
+  //*
   console.log("getColumnContent tests");
   //*/
   /*
