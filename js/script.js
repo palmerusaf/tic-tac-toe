@@ -62,8 +62,7 @@ const GameBoard = (() => {
   const _getCell = (rowIndex, columnIndex) =>
     _cells.filter(
       (cell) =>
-        (cell.getRowIndex() === rowIndex) &
-        (cell.getColumnIndex() === columnIndex)
+        cell.getRowIndex() === rowIndex && cell.getColumnIndex() === columnIndex
     )[0];
 
   const setCellContent = (rowIndex, columnIndex, mark) =>
@@ -72,29 +71,20 @@ const GameBoard = (() => {
   const getCellContent = (rowIndex, columnIndex) =>
     _getCell(rowIndex, columnIndex).getContent();
 
-  const _getArrayContent = (array) => array.map(cell.getContent());
-  const getRowContent = (rowIndex) => {
-    const row = cells.filter((cell) => cell.getRowIndex() === rowIndex);
-    return _getArrayContent(row);
-  };
-   const getColumnContent=(columnIndex) => {
-    const column = cells.filter((cell) => cell.getRowIndex() === columnIndex);
-    return _getArrayContent(column);
-  };;
   const isCellInBackDiagonal = (rowIndex, columnIndex) =>
     rowIndex === columnIndex;
 
   const isCellInForwardDiagonal = (rowIndex, columnIndex) =>
     rowIndex + columnIndex === _GRID_SIZE - 1;
-<<<<<<< Updated upstream
-=======
-  // const getForwardDiagonalContent;
-  // const getBackDiagonalContent;
->>>>>>> Stashed changes
 
   const resetArray = () => {
     _cells.forEach((cell) => cell.resetCell());
   };
+
+  const getColumnContent = (columnIndex) =>
+    _cells
+      .filter((cell) => cell.getColumnIndex() === columnIndex)
+      .map((cell) => cell.getContent());
 
   return {
     resetArray,
@@ -102,6 +92,7 @@ const GameBoard = (() => {
     isCellInForwardDiagonal,
     setCellContent,
     getCellContent,
+    getColumnContent,
   };
 })();
 // GameBoard Tests
@@ -113,11 +104,16 @@ const GameBoard = (() => {
   GameBoard.resetArray();
   GameBoard.cells.forEach((cell) => console.log(cell.getIsPlayed()));
   //*/
-  //*
+  /*
   console.log("getRowContent tests"); /*
   //*/
   //*
   console.log("getColumnContent tests");
+  GameBoard.setCellContent(0, 1, "X");
+  GameBoard.setCellContent(1, 1, "O");
+  GameBoard.setCellContent(2, 1, "X");
+  console.log(GameBoard.getColumnContent(1));
+  console.log(GameBoard.getColumnContent(2));
   //*/
   /*
   console.log("isCellInForwardDiagonal tests");
