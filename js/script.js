@@ -17,6 +17,7 @@ const BoardCell = function (rowIndex, columnIndex) {
     _content = mark;
     _isPlayed = true;
   };
+
   const getContent = () => _content;
   const resetCell = () => {
     _isPlayed = false;
@@ -48,24 +49,46 @@ console.log(nc.setPlayersMark("O"));
 //gameboard module handles all gameboard data and initialization
 const GameBoard = (() => {
   const _GRID_SIZE = 3;
-  let cells = [];
+  let _cells = [];
+
   const _initCellArray = () => {
     for (let rowIndex = 0; rowIndex < _GRID_SIZE; rowIndex++)
       for (let columnIndex = 0; columnIndex < _GRID_SIZE; ++columnIndex)
-        cells.push(BoardCell(rowIndex, columnIndex));
-    return cells;
+        _cells.push(BoardCell(rowIndex, columnIndex));
+    return _cells;
   };
-  cells = _initCellArray();
+  _cells = _initCellArray();
+
+  const _getCell = (rowIndex, columnIndex) =>
+    _cells.filter(
+      (cell) =>
+        (cell.getRowIndex() === rowIndex) &
+        (cell.getColumnIndex() === columnIndex)
+    )[0];
+
+  const setCellContent = (rowIndex, columnIndex, mark) =>
+    _getCell(rowIndex, columnIndex).setContent(mark);
+
+  const getCellContent = (rowIndex, columnIndex) =>
+    _getCell(rowIndex, columnIndex).getContent();
 
   const isCellInBackDiagonal = (rowIndex, columnIndex) =>
     rowIndex === columnIndex;
+
   const isCellInForwardDiagonal = (rowIndex, columnIndex) =>
     rowIndex + columnIndex === _GRID_SIZE - 1;
+
   const resetArray = () => {
-    cells.forEach((cell) => cell.resetCell());
+    _cells.forEach((cell) => cell.resetCell());
   };
 
-  return { cells, resetArray, isCellInBackDiagonal, isCellInForwardDiagonal };
+  return {
+    resetArray,
+    isCellInBackDiagonal,
+    isCellInForwardDiagonal,
+    setCellContent,
+    getCellContent,
+  };
 })();
 // GameBoard Tests
 {
@@ -101,5 +124,11 @@ const GameBoard = (() => {
   //*/
   /*
   console.log("getBackDiagonalContent tests");
+  //*/
+  /*
+  console.log("get/setCellContent tests");
+  GameBoard.setCellContent(1, 1, "X");
+  console.log(GameBoard.getCellContent(1, 1));
+  console.log(GameBoard.getCellContent(1, 0));
   //*/
 }
