@@ -5,28 +5,30 @@ const BoardCell = function (rowIndex, columnIndex) {
   const _rowIndex = rowIndex;
   const _columnIndex = columnIndex;
   let _isPlayed = false;
-  let _playersMark = "";
+  let _content = "";
+
   const getRowIndex = () => _rowIndex;
   const getColumnIndex = () => _columnIndex;
   const getIsPlayed = () => _isPlayed;
-  const setPlayersMark = function (mark) {
+  const setContent = function (mark) {
     if (_isPlayed) return console.log("Cell already played.");
     if (mark !== "X" && mark !== "O")
       return console.log("Error: Invalid mark.");
-    _playersMark = mark;
+    _content = mark;
     _isPlayed = true;
   };
-  const resetCell = function () {
+  const getContent = () => _content;
+  const resetCell = () => {
     _isPlayed = false;
-    _playersMark = "";
+    _content = "";
   };
-  const getPlayersMark = () => _playersMark;
+
   return {
     getRowIndex,
     getColumnIndex,
     getIsPlayed,
-    setPlayersMark,
-    getPlayersMark,
+    setContent,
+    getContent,
     resetCell,
   };
 };
@@ -41,9 +43,6 @@ console.log(nc.setPlayersMark("X"));
 console.log(nc.getIsPlayed());
 console.log(nc.getPlayersMark());
 console.log(nc.setPlayersMark("O"));
-console.log(nc.resetCell());
-console.log(nc.getIsPlayed());
-console.log(nc.getPlayersMark());
 //*/
 
 //gameboard module handles all gameboard data and initialization
@@ -54,9 +53,20 @@ const GameBoard = (() => {
     for (let rowIndex = 0; rowIndex < _GRID_SIZE; rowIndex++)
       for (let columnIndex = 0; columnIndex < _GRID_SIZE; ++columnIndex)
         cells.push(BoardCell(rowIndex, columnIndex));
-        return cells;
+    return cells;
   };
   cells = _initCellArray();
-return {cells};
+
+  const resetArray = () => {
+    cells.forEach((cell) => cell.resetCell());
+  };
+
+  return { cells, resetArray };
 })();
-console.log(GameBoard.cells);
+// GameBoard Tests
+//*
+GameBoard.cells[1].setContent("X");
+GameBoard.cells.forEach((cell) => console.log(cell.getIsPlayed()));
+GameBoard.resetArray();
+GameBoard.cells.forEach((cell) => console.log(cell.getIsPlayed()));
+//*/
