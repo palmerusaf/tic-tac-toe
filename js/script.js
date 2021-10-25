@@ -57,16 +57,49 @@ const GameBoard = (() => {
   };
   cells = _initCellArray();
 
+  const isCellInBackDiagonal = (rowIndex, columnIndex) =>
+    rowIndex === columnIndex;
+  const isCellInForwardDiagonal = (rowIndex, columnIndex) =>
+    rowIndex + columnIndex === _GRID_SIZE - 1;
   const resetArray = () => {
     cells.forEach((cell) => cell.resetCell());
   };
 
-  return { cells, resetArray };
+  return { cells, resetArray, isCellInBackDiagonal, isCellInForwardDiagonal };
 })();
 // GameBoard Tests
-//*
-GameBoard.cells[1].setContent("X");
-GameBoard.cells.forEach((cell) => console.log(cell.getIsPlayed()));
-GameBoard.resetArray();
-GameBoard.cells.forEach((cell) => console.log(cell.getIsPlayed()));
-//*/
+{
+  /*
+  console.log("resetArray() tests");
+  GameBoard.cells[1].setContent("X");
+  GameBoard.cells.forEach((cell) => console.log(cell.getIsPlayed()));
+  GameBoard.resetArray();
+  GameBoard.cells.forEach((cell) => console.log(cell.getIsPlayed()));
+  //*/
+  /*
+  console.log("getRowContent tests"); /*
+  //*/
+  /*
+  console.log("getColumnContent tests");
+  //*/
+  /*
+  console.log("isCellInForwardDiagonal tests");
+  console.log(GameBoard.isCellInForwardDiagonal(0, 2));
+  console.log(GameBoard.isCellInForwardDiagonal(1, 1));
+  console.log(GameBoard.isCellInForwardDiagonal(2, 0));
+  console.log(GameBoard.isCellInForwardDiagonal(2, 1));
+  //*/
+  /*
+  console.log("isCellInBackDiagonal tests");
+  console.log(GameBoard.isCellInBackDiagonal(0, 0));
+  console.log(GameBoard.isCellInBackDiagonal(1, 1));
+  console.log(GameBoard.isCellInBackDiagonal(2, 2));
+  console.log(GameBoard.isCellInBackDiagonal(1, 2));
+  //*/
+  /*
+  console.log("getForwardDiagonalContent tests");
+  //*/
+  /*
+  console.log("getBackDiagonalContent tests");
+  //*/
+}
