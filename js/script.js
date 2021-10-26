@@ -86,7 +86,10 @@ const GameBoard = (() => {
       if (propType === "column") return cell.getColumnIndex() === desiredProp;
       if (propType === "row") return cell.getRowIndex() === desiredProp;
       if (propType === "forwardDiagonal")
-        return isCellInForwardDiagonal(cell.getRowIndex(), cell.getColumnIndex());
+        return isCellInForwardDiagonal(
+          cell.getRowIndex(),
+          cell.getColumnIndex()
+        );
       if (propType === "backDiagonal")
         return isCellInBackDiagonal(cell.getRowIndex(), cell.getColumnIndex());
     });
@@ -103,6 +106,8 @@ const GameBoard = (() => {
   const getBackDiagonalContent = () =>
     _getCellsWithProp("backDiagonal").map((cell) => cell.getContent());
 
+  const getGridSize = () => _GRID_SIZE;
+
   return {
     resetArray,
     isCellInBackDiagonal,
@@ -113,6 +118,7 @@ const GameBoard = (() => {
     getRowContent,
     getForwardDiagonalContent,
     getBackDiagonalContent,
+    getGridSize,
   };
 })();
 // GameBoard Tests
