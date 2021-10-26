@@ -81,10 +81,27 @@ const GameBoard = (() => {
     _cells.forEach((cell) => cell.resetCell());
   };
 
+  const _getCellsWithProp = (propType, desiredProp) =>
+    _cells.filter((cell) => {
+      if (propType === "column") return cell.getColumnIndex() === desiredProp;
+      if (propType === "row") return cell.getRowIndex() === desiredProp;
+      if (propType === "forwardDiagonal")
+        return isCellInForwardDiagonal(cell.getRowIndex(), cell.getColumnIndex());
+      if (propType === "backDiagonal")
+        return isCellInBackDiagonal(cell.getRowIndex(), cell.getColumnIndex());
+    });
+
   const getColumnContent = (columnIndex) =>
-    _cells
-      .filter((cell) => cell.getColumnIndex() === columnIndex)
-      .map((cell) => cell.getContent());
+    _getCellsWithProp("column", columnIndex).map((cell) => cell.getContent());
+
+  const getRowContent = (rowIndex) =>
+    _getCellsWithProp("row", rowIndex).map((cell) => cell.getContent());
+
+  const getForwardDiagonalContent = () =>
+    _getCellsWithProp("forwardDiagonal").map((cell) => cell.getContent());
+
+  const getBackDiagonalContent = () =>
+    _getCellsWithProp("backDiagonal").map((cell) => cell.getContent());
 
   return {
     resetArray,
@@ -93,6 +110,9 @@ const GameBoard = (() => {
     setCellContent,
     getCellContent,
     getColumnContent,
+    getRowContent,
+    getForwardDiagonalContent,
+    getBackDiagonalContent,
   };
 })();
 // GameBoard Tests
@@ -105,15 +125,36 @@ const GameBoard = (() => {
   GameBoard.cells.forEach((cell) => console.log(cell.getIsPlayed()));
   //*/
   /*
-  console.log("getRowContent tests"); /*
+  console.log("getRowContent tests"); 
+  GameBoard.setCellContent(1, 0, "X");
+  GameBoard.setCellContent(1, 1, "O");
+  GameBoard.setCellContent(1, 2, "X");
+  console.log(GameBoard.getRowContent(1));
+  console.log(GameBoard.getRowContent(2));
   //*/
-  //*
+  /*
   console.log("getColumnContent tests");
   GameBoard.setCellContent(0, 1, "X");
   GameBoard.setCellContent(1, 1, "O");
   GameBoard.setCellContent(2, 1, "X");
   console.log(GameBoard.getColumnContent(1));
   console.log(GameBoard.getColumnContent(2));
+  //*/
+  /*
+  console.log("getForwardDiagonalContent tests");
+  GameBoard.setCellContent(2, 0, "X");
+  GameBoard.setCellContent(1, 1, "O");
+  GameBoard.setCellContent(0, 2, "X");
+  console.log(GameBoard.getForwardDiagonalContent());
+  console.log(GameBoard.getBackDiagonalContent());
+  //*/
+  /*
+  console.log("getBackDiagonalContent tests");
+  GameBoard.setCellContent(0, 0, "X");
+  GameBoard.setCellContent(1, 1, "O");
+  GameBoard.setCellContent(2, 2, "X");
+  console.log(GameBoard.getBackDiagonalContent());
+  console.log(GameBoard.getForwardDiagonalContent());
   //*/
   /*
   console.log("isCellInForwardDiagonal tests");
@@ -128,12 +169,6 @@ const GameBoard = (() => {
   console.log(GameBoard.isCellInBackDiagonal(1, 1));
   console.log(GameBoard.isCellInBackDiagonal(2, 2));
   console.log(GameBoard.isCellInBackDiagonal(1, 2));
-  //*/
-  /*
-  console.log("getForwardDiagonalContent tests");
-  //*/
-  /*
-  console.log("getBackDiagonalContent tests");
   //*/
   /*
   console.log("get/setCellContent tests");
