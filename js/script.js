@@ -1,6 +1,6 @@
 "use strict";
 
-// create game board cells for gameboard array
+// create game board cells for GameBoard array
 const BoardCell = function (rowIndex, columnIndex) {
   const _rowIndex = rowIndex;
   const _columnIndex = columnIndex;
@@ -46,7 +46,7 @@ console.log(nc.getPlayersMark());
 console.log(nc.setPlayersMark("O"));
 //*/
 
-//gameboard module handles all gameboard data and initialization
+// GameBoard module handles all data access and initialization
 const GameBoard = (() => {
   const _GRID_SIZE = 3;
   let _cells = [];
@@ -183,3 +183,8 @@ const GameBoard = (() => {
   console.log(GameBoard.getCellContent(1, 0));
   //*/
 }
+
+// Render module handles all DOM access and initialization
+const Render = (() => {
+
+})();
