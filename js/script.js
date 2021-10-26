@@ -199,7 +199,27 @@ const Render = (() => {
         cell.style.height = `${100 / GameBoard.getGridSize()}%`;
         cell.dataset.row = row;
         cell.dataset.column = column;
+        cell.addEventListener("click", (e) => {
+          console.log("GameController.onClick");
+          console.log(e);
+        });
         _container.appendChild(cell);
       }
   })();
+
+  const _selectCell = (rowIndex, columnIndex) =>
+    document.querySelector(
+      `.board__cell[data-row='${rowIndex}'][data-column='${columnIndex}']`
+    );
+
+  const displayContentToCell = (rowIndex, columnIndex, mark) =>
+    (_selectCell(rowIndex, columnIndex).textContent = mark);
+  return { displayContentToCell };
 })();
+// Render Tests
+{
+  /*
+  console.log("displayContentToCell Tests");
+  Render.displayContentToCell(1, 1, "X");
+  //*/
+}
