@@ -186,5 +186,20 @@ const GameBoard = (() => {
 
 // Render module handles all DOM access and initialization
 const Render = (() => {
-
+  const _body = document.querySelector("body");
+  const _container = document.createElement("div");
+  _container.className = "board";
+  _body.appendChild(_container);
+  const _initCells = (() => {
+    for (let row = 0; row < GameBoard.getGridSize(); row++)
+      for (let column = 0; column < GameBoard.getGridSize(); column++) {
+        const cell = document.createElement("div");
+        cell.className = "board__cell";
+        cell.style.width = `${100 / GameBoard.getGridSize()}%`;
+        cell.style.height = `${100 / GameBoard.getGridSize()}%`;
+        cell.dataset.row = row;
+        cell.dataset.column = column;
+        _container.appendChild(cell);
+      }
+  })();
 })();
