@@ -221,6 +221,21 @@ const Render = (() => {
     );
   };
 
+  const _resetButton = () => {
+    const button = document.createElement("button");
+    button.className = "reset-button";
+    button.textContent = "Reset Game";
+    button.addEventListener("click", () => {
+      eraseContentFromAllCells();
+      console.log(
+        "TODO add callback for resetbutton function in GameController Module"
+      );
+    });
+    return button;
+  };
+
+  _body.appendChild(_resetButton());
+
   return { displayContentToCell, eraseContentFromAllCells };
 })();
 // Render Tests

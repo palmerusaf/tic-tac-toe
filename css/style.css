@@ -18,4 +18,8 @@ body {
     font-family: sans-serif;
     font-size: 7rem; }
 
+.reset-button {
+  padding: 2px;
+  width: 90px; }
+
 /*# sourceMappingURL=style.css.map */

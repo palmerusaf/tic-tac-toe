@@ -11,12 +11,17 @@ body {
   width: 500px;
   height: 500px;
   &__cell {
-      display: flex;
+    display: flex;
     outline: black solid 1px;
-justify-content: center;
-align-items: center;
+    justify-content: center;
+    align-items: center;
     vertical-align: middle;
     font-family: sans-serif;
     font-size: 7rem;
   }
+}
+
+.reset-button {
+  padding: 2px;
+  width: 90px;
 }
