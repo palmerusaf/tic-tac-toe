@@ -214,12 +214,30 @@ const Render = (() => {
 
   const displayContentToCell = (rowIndex, columnIndex, mark) =>
     (_selectCell(rowIndex, columnIndex).textContent = mark);
-  return { displayContentToCell };
+
+  const eraseContentFromAllCells = () => {
+    [...document.querySelectorAll(".board__cell")].forEach(
+      (cell) => (cell.textContent = "")
+    );
+  };
+
+  return { displayContentToCell, eraseContentFromAllCells };
 })();
 // Render Tests
 {
   /*
   console.log("displayContentToCell Tests");
   Render.displayContentToCell(1, 1, "X");
+  //*/
+  /*
+  console.log("eraseContentFromAllCells Tests");
+  Render.displayContentToCell(0, 1, "X");
+  Render.displayContentToCell(1, 1, "X");
+  Render.displayContentToCell(2, 1, "O");
+  Render.eraseContentFromAllCells();
+  Render.displayContentToCell(0, 0, "X");
+  Render.displayContentToCell(0, 1, "X");
+  Render.displayContentToCell(0, 2, "O");
+  Render.eraseContentFromAllCells();
   //*/
 }
