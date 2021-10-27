@@ -327,7 +327,20 @@ const Player = () => {
     _mark ? console.log("Error: Player mark already set.") : (_mark = mark);
   const getMark = () => _mark;
 
-  return { setAlias, getAlias,setMark,getMark };
+  const setIsPlayerTurn = (bool) =>
+    bool === _isPlayerTurn
+      ? console.log(`Error: isPlayerTurn already set to ${bool}.`)
+      : (_isPlayerTurn = bool);
+  const getIsPlayerTurn = () => _isPlayerTurn;
+
+  return {
+    setAlias,
+    getAlias,
+    setMark,
+    getMark,
+    getIsPlayerTurn,
+    setIsPlayerTurn,
+  };
 };
 // Player Tests
 {
@@ -344,5 +357,12 @@ const Player = () => {
   myPlayer.setMark("X");
   console.log(myPlayer.getMark());
   myPlayer.setMark("O");
+  //*/
+  /*
+  const myPlayer = Player();
+  console.log("set/getIsPlayerTurn Tests");
+  myPlayer.setIsPlayerTurn(true);
+  console.log(myPlayer.getIsPlayerTurn());
+  myPlayer.setIsPlayerTurn(true);
   //*/
 }
