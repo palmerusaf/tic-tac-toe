@@ -316,7 +316,7 @@ const Render = (() => {
 const Player = () => {
   let _alias;
   let _mark;
-  let _isPlayerTurn = false;
+  let _isTurn = false;
   let _isWinner = false;
 
   const setAlias = (alias) =>
@@ -327,19 +327,27 @@ const Player = () => {
     _mark ? console.log("Error: Player mark already set.") : (_mark = mark);
   const getMark = () => _mark;
 
-  const setIsPlayerTurn = (bool) =>
-    bool === _isPlayerTurn
+  const setIsTurn = (bool) =>
+    bool === _isTurn
       ? console.log(`Error: isPlayerTurn already set to ${bool}.`)
-      : (_isPlayerTurn = bool);
-  const getIsPlayerTurn = () => _isPlayerTurn;
+      : (_isTurn = bool);
+  const getIsTurn = () => _isTurn;
+
+  const setIsWinner = (bool) =>
+    bool === _isWinner
+      ? console.log(`Error: isWinner already set to ${bool}.`)
+      : (_isWinner = bool);
+  const getIsWinner = () => _isWinner;
 
   return {
     setAlias,
     getAlias,
     setMark,
     getMark,
-    getIsPlayerTurn,
-    setIsPlayerTurn,
+    getIsTurn,
+    setIsTurn,
+    setIsWinner,
+    getIsWinner,
   };
 };
 // Player Tests
@@ -360,9 +368,16 @@ const Player = () => {
   //*/
   /*
   const myPlayer = Player();
-  console.log("set/getIsPlayerTurn Tests");
-  myPlayer.setIsPlayerTurn(true);
-  console.log(myPlayer.getIsPlayerTurn());
-  myPlayer.setIsPlayerTurn(true);
+  console.log("set/getIsTurn Tests");
+  myPlayer.setIsTurn(true);
+  console.log(myPlayer.getIsTurn());
+  myPlayer.setIsTurn(true);
+  //*/
+  /*
+  const myPlayer = Player();
+  console.log("set/getIsWinner Tests");
+  myPlayer.setIsWinner(true);
+  console.log(myPlayer.getIsWinner());
+  myPlayer.setIsWinner(true);
   //*/
 }
