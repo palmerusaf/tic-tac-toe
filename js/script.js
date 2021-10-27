@@ -186,5 +186,223 @@ const GameBoard = (() => {
 
 // Render module handles all DOM access and initialization
 const Render = (() => {
+  const _body = document.querySelector("body");
+  const _board = document.createElement("div");
+  _board.className = "flex board";
+  _body.appendChild(_board);
 
+  const _buildCell = (row, column) => {
+    const cell = document.createElement("div");
+    cell.className = "flex board__cell";
+    cell.style.width = `${100 / GameBoard.getGridSize()}%`;
+    cell.style.height = `${100 / GameBoard.getGridSize()}%`;
+    cell.dataset.row = row;
+    cell.dataset.column = column;
+    return cell;
+  };
+
+  const _addEventToCell = (cell) => {
+    cell.addEventListener("click", (e) => {
+      console.log("GameController.onClick");
+      console.log(e);
+    });
+  };
+
+  const _initCells = (() => {
+    for (let row = 0; row < GameBoard.getGridSize(); row++)
+      for (let column = 0; column < GameBoard.getGridSize(); column++) {
+        const cell = _buildCell(row, column);
+        _addEventToCell(cell);
+        _board.appendChild(cell);
+      }
+  })();
+
+  const _selectCell = (rowIndex, columnIndex) =>
+    document.querySelector(
+      `.board__cell[data-row='${rowIndex}'][data-column='${columnIndex}']`
+    );
+
+  const displayContentToCell = (rowIndex, columnIndex, mark) =>
+    (_selectCell(rowIndex, columnIndex).textContent = mark);
+
+  const eraseContentFromAllCells = () => {
+    [...document.querySelectorAll(".board__cell")].forEach(
+      (cell) => (cell.textContent = "")
+    );
+  };
+
+  const _resetButton = () => {
+    const button = document.createElement("button");
+    button.className = "button";
+    button.textContent = "Reset Game";
+    button.addEventListener("click", () => {
+      eraseContentFromAllCells();
+      console.log(
+        "TODO add callback for resetbutton function in GameController Module"
+      );
+    });
+    return button;
+  };
+  _body.appendChild(_resetButton());
+
+  const _okButton = () => {
+    const button = document.createElement("button");
+    button.className = "button";
+    button.addEventListener("click", _closeMsgWindow);
+    return button;
+  };
+
+  const _closeMsgWindow = () => {
+    const window = document.querySelector(".msg-window");
+    window.remove();
+  };
+
+  const _messageWindow = (message) => {
+    const window = document.createElement("div");
+    window.className = "flex-col msg-window";
+    window.textContent = message;
+    const buttonContainer = document.createElement("span");
+    buttonContainer.className = "flex msg-window__button-container";
+    const resetButton = _resetButton();
+    resetButton.className += " msg-window__button";
+    resetButton.addEventListener("click", _closeMsgWindow);
+    const okButton = _okButton();
+    okButton.className += " msg-window__button";
+    okButton.textContent = "OK";
+
+    buttonContainer.appendChild(resetButton);
+    buttonContainer.appendChild(okButton);
+    window.appendChild(buttonContainer);
+    return window;
+  };
+
+  const winnerMessage = (winner) =>
+    _body.appendChild(
+      _messageWindow(`Congratulations ${winner}, you have won!!!`)
+    );
+
+  const tieMessage = () =>
+    _body.appendChild(
+      _messageWindow("No more moves available. The game has ended in a tie.")
+    );
+
+  return {
+    displayContentToCell,
+    eraseContentFromAllCells,
+    winnerMessage,
+    tieMessage,
+  };
 })();
+// Render Tests
+{
+  /*
+  console.log("displayContentToCell Tests");
+  Render.displayContentToCell(1, 1, "X");
+  //*/
+  /*
+  console.log("eraseContentFromAllCells Tests");
+  Render.displayContentToCell(0, 1, "X");
+  Render.displayContentToCell(1, 1, "X");
+  Render.displayContentToCell(2, 1, "O");
+  Render.eraseContentFromAllCells();
+  Render.displayContentToCell(0, 0, "X");
+  Render.displayContentToCell(0, 1, "X");
+  Render.displayContentToCell(0, 2, "O");
+  Render.eraseContentFromAllCells();
+  //*/
+}
+
+// Player factory that stores info about player objects
+const Player = () => {
+  let _alias = "";
+  let _mark = "";
+  let _isTurn = false;
+  let _isWinner = false;
+
+  const setAlias = (alias) =>
+    _alias ? console.log("Error: Player name already set.") : (_alias = alias);
+  const getAlias = () => _alias;
+
+  const setMark = (mark) =>
+    _mark ? console.log("Error: Player mark already set.") : (_mark = mark);
+  const getMark = () => _mark;
+
+  const setIsTurn = (bool) =>
+    bool === _isTurn
+      ? console.log(`Error: isPlayerTurn already set to ${bool}.`)
+      : (_isTurn = bool);
+  const getIsTurn = () => _isTurn;
+
+  const setIsWinner = (bool) =>
+    bool === _isWinner
+      ? console.log(`Error: isWinner already set to ${bool}.`)
+      : (_isWinner = bool);
+  const getIsWinner = () => _isWinner;
+
+  const reset = () => {
+    _alias = "";
+    _mark = "";
+    _isTurn = false;
+    _isWinner = false;
+  };
+
+  return {
+    setAlias,
+    getAlias,
+    setMark,
+    getMark,
+    getIsTurn,
+    setIsTurn,
+    setIsWinner,
+    getIsWinner,
+    reset,
+  };
+};
+// Player Tests
+{
+  /*
+  const myPlayer = Player();
+  console.log("set/getAlias Tests");
+  myPlayer.setAlias("Branden");
+  console.log(myPlayer.getAlias());
+  myPlayer.setAlias("Branden");
+  //*/
+  /*
+  const myPlayer = Player();
+  console.log("set/getMark Tests");
+  myPlayer.setMark("X");
+  console.log(myPlayer.getMark());
+  myPlayer.setMark("O");
+  //*/
+  /*
+  const myPlayer = Player();
+  console.log("set/getIsTurn Tests");
+  myPlayer.setIsTurn(true);
+  console.log(myPlayer.getIsTurn());
+  myPlayer.setIsTurn(true);
+  //*/
+  /*
+  const myPlayer = Player();
+  console.log("set/getIsWinner Tests");
+  myPlayer.setIsWinner(true);
+  console.log(myPlayer.getIsWinner());
+  myPlayer.setIsWinner(true);
+  //*/
+  /*
+  const myPlayer = Player();
+  console.log("reset Tests");
+  myPlayer.setAlias("Branden");
+  myPlayer.setIsWinner(true);
+  myPlayer.setIsTurn(true);
+  myPlayer.setMark("X");
+  console.log("winner = " + myPlayer.getIsWinner());
+  console.log("isTurn = " + myPlayer.getIsTurn());
+  console.log("mark = " + myPlayer.getMark());
+  console.log("player name = " + myPlayer.getAlias());
+  myPlayer.reset();
+  console.log("winner = " + myPlayer.getIsWinner());
+  console.log("isTurn = " + myPlayer.getIsTurn());
+  console.log("mark = " + myPlayer.getMark());
+  console.log("player name = " + myPlayer.getAlias());
+  //*/
+}
