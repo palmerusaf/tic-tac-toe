@@ -314,8 +314,8 @@ const Render = (() => {
 
 // Player factory that stores info about player objects
 const Player = () => {
-  let _alias;
-  let _mark;
+  let _alias = "";
+  let _mark = "";
   let _isTurn = false;
   let _isWinner = false;
 
@@ -339,6 +339,13 @@ const Player = () => {
       : (_isWinner = bool);
   const getIsWinner = () => _isWinner;
 
+  const reset = () => {
+    _alias = "";
+    _mark = "";
+    _isTurn = false;
+    _isWinner = false;
+  };
+
   return {
     setAlias,
     getAlias,
@@ -348,6 +355,7 @@ const Player = () => {
     setIsTurn,
     setIsWinner,
     getIsWinner,
+    reset,
   };
 };
 // Player Tests
@@ -379,5 +387,22 @@ const Player = () => {
   myPlayer.setIsWinner(true);
   console.log(myPlayer.getIsWinner());
   myPlayer.setIsWinner(true);
+  //*/
+  /*
+  const myPlayer = Player();
+  console.log("reset Tests");
+  myPlayer.setAlias("Branden");
+  myPlayer.setIsWinner(true);
+  myPlayer.setIsTurn(true);
+  myPlayer.setMark("X");
+  console.log("winner = " + myPlayer.getIsWinner());
+  console.log("isTurn = " + myPlayer.getIsTurn());
+  console.log("mark = " + myPlayer.getMark());
+  console.log("player name = " + myPlayer.getAlias());
+  myPlayer.reset();
+  console.log("winner = " + myPlayer.getIsWinner());
+  console.log("isTurn = " + myPlayer.getIsTurn());
+  console.log("mark = " + myPlayer.getMark());
+  console.log("player name = " + myPlayer.getAlias());
   //*/
 }
