@@ -266,7 +266,22 @@ const Render = (() => {
     return window;
   };
 
-  return { displayContentToCell, eraseContentFromAllCells };
+  const winnerMessage = (winner) =>
+    _body.appendChild(
+      _messageWindow(`Congratulations ${winner}, you have won!!!`)
+    );
+
+  const tieMessage = () =>
+    _body.appendChild(
+      _messageWindow("No more moves available. The game has ended in a tie.")
+    );
+
+  return {
+    displayContentToCell,
+    eraseContentFromAllCells,
+    winnerMessage,
+    tieMessage,
+  };
 })();
 // Render Tests
 {
