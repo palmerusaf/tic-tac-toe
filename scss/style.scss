@@ -1,17 +1,19 @@
-body {
+.flex-col {
   display: flex;
   flex-direction: column;
 }
 
-.board {
+.flex {
   display: flex;
+}
+
+.board {
   align-self: center;
   flex-wrap: wrap;
   outline: white solid 1px;
   width: 500px;
   height: 500px;
   &__cell {
-    display: flex;
     outline: black solid 1px;
     justify-content: center;
     align-items: center;
@@ -21,7 +23,23 @@ body {
   }
 }
 
-.reset-button {
+.button {
   padding: 2px;
   width: 90px;
+}
+
+.msg-window {
+  position: absolute;
+  margin-top: 8.5em;
+  padding: 5em;
+  justify-self: center;
+  align-self: center;
+  z-index: 1;
+  background: rgba($color: white, $alpha: .7);
+  outline: black solid 1px;
+  &__button-container {
+    gap: 8px;
+    justify-content: center;
+    margin-top: 2em;
+  }
 }

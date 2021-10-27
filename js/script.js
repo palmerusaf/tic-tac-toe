@@ -188,13 +188,13 @@ const GameBoard = (() => {
 const Render = (() => {
   const _body = document.querySelector("body");
   const _container = document.createElement("div");
-  _container.className = "board";
+  _container.className = "flex board";
   _body.appendChild(_container);
   const _initCells = (() => {
     for (let row = 0; row < GameBoard.getGridSize(); row++)
       for (let column = 0; column < GameBoard.getGridSize(); column++) {
         const cell = document.createElement("div");
-        cell.className = "board__cell";
+        cell.className = "flex board__cell";
         cell.style.width = `${100 / GameBoard.getGridSize()}%`;
         cell.style.height = `${100 / GameBoard.getGridSize()}%`;
         cell.dataset.row = row;
@@ -223,7 +223,7 @@ const Render = (() => {
 
   const _resetButton = () => {
     const button = document.createElement("button");
-    button.className = "reset-button";
+    button.className = "button";
     button.textContent = "Reset Game";
     button.addEventListener("click", () => {
       eraseContentFromAllCells();
@@ -233,8 +233,38 @@ const Render = (() => {
     });
     return button;
   };
-
   _body.appendChild(_resetButton());
+
+  const _okButton = () => {
+    const button = document.createElement("button");
+    button.className = "button";
+    button.addEventListener("click", _closeMsgWindow);
+    return button;
+  };
+
+  const _closeMsgWindow = () => {
+    const window = document.querySelector(".msg-window");
+    window.remove();
+  };
+
+  const _messageWindow = (message) => {
+    const window = document.createElement("div");
+    window.className = "flex-col msg-window";
+    window.textContent = message;
+    const buttonContainer = document.createElement("span");
+    buttonContainer.className = "flex msg-window__button-container";
+    const resetButton = _resetButton();
+    resetButton.className += " msg-window__button";
+    resetButton.addEventListener("click", _closeMsgWindow);
+    const okButton = _okButton();
+    okButton.className += " msg-window__button";
+    okButton.textContent = "OK";
+
+    buttonContainer.appendChild(resetButton);
+    buttonContainer.appendChild(okButton);
+    window.appendChild(buttonContainer);
+    return window;
+  };
 
   return { displayContentToCell, eraseContentFromAllCells };
 })();

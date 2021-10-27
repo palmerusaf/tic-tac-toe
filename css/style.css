@@ -1,16 +1,17 @@
-body {
+.flex-col {
   display: flex;
   flex-direction: column; }
 
+.flex {
+  display: flex; }
+
 .board {
-  display: flex;
   align-self: center;
   flex-wrap: wrap;
   outline: white solid 1px;
   width: 500px;
   height: 500px; }
   .board__cell {
-    display: flex;
     outline: black solid 1px;
     justify-content: center;
     align-items: center;
@@ -18,8 +19,22 @@ body {
     font-family: sans-serif;
     font-size: 7rem; }
 
-.reset-button {
+.button {
   padding: 2px;
   width: 90px; }
+
+.msg-window {
+  position: absolute;
+  margin-top: 8.5em;
+  padding: 5em;
+  justify-self: center;
+  align-self: center;
+  z-index: 1;
+  background: rgba(255, 255, 255, 0.7);
+  outline: black solid 1px; }
+  .msg-window__button-container {
+    gap: 8px;
+    justify-content: center;
+    margin-top: 2em; }
 
 /*# sourceMappingURL=style.css.map */
