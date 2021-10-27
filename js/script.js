@@ -315,14 +315,19 @@ const Render = (() => {
 // Player factory that stores info about player objects
 const Player = () => {
   let _alias;
-  let _markType;
+  let _mark;
   let _isPlayerTurn = false;
   let _isWinner = false;
+
   const setAlias = (alias) =>
-    _alias ? console.log("Error: Name already set.") : (_alias = alias);
+    _alias ? console.log("Error: Player name already set.") : (_alias = alias);
   const getAlias = () => _alias;
 
-  return { setAlias, getAlias };
+  const setMark = (mark) =>
+    _mark ? console.log("Error: Player mark already set.") : (_mark = mark);
+  const getMark = () => _mark;
+
+  return { setAlias, getAlias,setMark,getMark };
 };
 // Player Tests
 {
@@ -332,5 +337,12 @@ const Player = () => {
   myPlayer.setAlias("Branden");
   console.log(myPlayer.getAlias());
   myPlayer.setAlias("Branden");
+  //*/
+  /*
+  const myPlayer = Player();
+  console.log("set/getMark Tests");
+  myPlayer.setMark("X");
+  console.log(myPlayer.getMark());
+  myPlayer.setMark("O");
   //*/
 }
