@@ -406,3 +406,20 @@ const Player = () => {
   console.log("player name = " + myPlayer.getAlias());
   //*/
 }
+
+// GameController Module handles logic for determining win and servers as go
+// between for Render and GameBoard Module
+const GameController = (() => {
+  const _NUM_OF_PLAYERS = 2;
+  let _players = [];
+  const _initPlayers = (() => {
+    for (let i = 0; i < _NUM_OF_PLAYERS; i++) {
+      const player = Player();
+      _players.push(player);
+    }
+  })();
+})();
+//GameController Tests
+{
+
+}
