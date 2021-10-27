@@ -311,3 +311,26 @@ const Render = (() => {
   Render.eraseContentFromAllCells();
   //*/
 }
+
+// Player factory that stores info about player objects
+const Player = () => {
+  let _alias;
+  let _markType;
+  let _isPlayerTurn = false;
+  let _isWinner = false;
+  const setAlias = (alias) =>
+    _alias ? console.log("Error: Name already set.") : (_alias = alias);
+  const getAlias = () => _alias;
+
+  return { setAlias, getAlias };
+};
+// Player Tests
+{
+  /*
+  const myPlayer = Player();
+  console.log("set/getAlias Tests");
+  myPlayer.setAlias("Branden");
+  console.log(myPlayer.getAlias());
+  myPlayer.setAlias("Branden");
+  //*/
+}
