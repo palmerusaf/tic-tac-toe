@@ -187,23 +187,33 @@ const GameBoard = (() => {
 // Render module handles all DOM access and initialization
 const Render = (() => {
   const _body = document.querySelector("body");
-  const _container = document.createElement("div");
-  _container.className = "flex board";
-  _body.appendChild(_container);
+  const _board = document.createElement("div");
+  _board.className = "flex board";
+  _body.appendChild(_board);
+
+  const _buildCell = (row, column) => {
+    const cell = document.createElement("div");
+    cell.className = "flex board__cell";
+    cell.style.width = `${100 / GameBoard.getGridSize()}%`;
+    cell.style.height = `${100 / GameBoard.getGridSize()}%`;
+    cell.dataset.row = row;
+    cell.dataset.column = column;
+    return cell;
+  };
+
+  const _addEventToCell = (cell) => {
+    cell.addEventListener("click", (e) => {
+      console.log("GameController.onClick");
+      console.log(e);
+    });
+  };
+
   const _initCells = (() => {
     for (let row = 0; row < GameBoard.getGridSize(); row++)
       for (let column = 0; column < GameBoard.getGridSize(); column++) {
-        const cell = document.createElement("div");
-        cell.className = "flex board__cell";
-        cell.style.width = `${100 / GameBoard.getGridSize()}%`;
-        cell.style.height = `${100 / GameBoard.getGridSize()}%`;
-        cell.dataset.row = row;
-        cell.dataset.column = column;
-        cell.addEventListener("click", (e) => {
-          console.log("GameController.onClick");
-          console.log(e);
-        });
-        _container.appendChild(cell);
+        const cell = _buildCell(row, column);
+        _addEventToCell(cell);
+        _board.appendChild(cell);
       }
   })();
 
