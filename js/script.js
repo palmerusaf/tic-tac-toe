@@ -334,6 +334,12 @@ function playerFieldContainer(){
   container.className="flex player-bar__player-field";
   buildFormArray().forEach(form=>container.appendChild(form));
 }
+function buildFormArray(){
+  let formArray=[];
+  for(let index=0;index<_NUM_OF_PLAYERS;index++)
+    buildPlayerForm(index)
+  return formArray;
+}
 _body.appendChild(playerBarContainer());
   })();
 
