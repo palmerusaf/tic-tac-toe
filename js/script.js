@@ -345,7 +345,7 @@ function buildPlayerForm(index){
   playerForm.className="flex player-bar__player-form"
   playerForm.id="player-form"+index;
   playerForm.action="#"
-  playerForm.onsubmit="switchFromToNamePlate();return false"
+  playerForm.onsubmit="return false"
   playerForm.appendChild(buildPlayerEntryBox(index));
   playerForm.appendChild(buildSetPlayerNameButton(index));
   return playerForm;
@@ -357,6 +357,15 @@ function buildPlayerEntryBox(index){
   entryBox.placeholder=`Enter name for Player ${index+1}.`;
   entryBox.required=true;
 return entryBox;
+}
+function buildSetPlayerNameButton(index){
+  const button = document.createElement("input");
+  button.className="button player-bar__set-name-button";
+  button.type="submit";
+  button.value="Set Name";
+  button.dataset.index=index;
+  button.addEventListener("click",switchFormToNamePlate);
+  return button;
 }
 _body.appendChild(playerBarContainer());
   })();
