@@ -366,10 +366,12 @@ const Render = (() => {
       if (textBoxValue) switchFormToNamePlate(textBoxValue, index);
     }
     function switchFormToNamePlate(textBoxValue, index) {
-      buildPlayerNamePlate(textBoxValue,index)
-      deletePlayerForm(index)
+      buildPlayerNamePlate(textBoxValue, index);
+      deletePlayerForm(index);
     }
-    // function deletePlayerForm
+    function deletePlayerForm(index) {
+      document.getElementById("player-form" + index).remove();
+    }
     // function buildPlayerNamePlate
     // function deleteNamePlates
     // const reset
