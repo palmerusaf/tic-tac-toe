@@ -366,13 +366,29 @@ const Render = (() => {
       if (textBoxValue) switchFormToNamePlate(textBoxValue, index);
     }
     function switchFormToNamePlate(textBoxValue, index) {
-      buildPlayerNamePlate(textBoxValue, index);
+      const namePlate = buildPlayerNamePlate(textBoxValue, index);
+      insertPlayerNamePlate(namePlate, index);
+      console.log(
+        "insert GameController.players[index].setAlias(textBoxValue) here:" +
+          switchFormToNamePlate
+      );
       deletePlayerForm(index);
     }
     function deletePlayerForm(index) {
       document.getElementById("player-form" + index).remove();
     }
-    // function buildPlayerNamePlate
+    function buildPlayerNamePlate(textBoxValue, index) {
+      const namePlate = document.createElement("div");
+      namePlate.className = "player-bar__name-plate";
+      namePlate.id = "player-name-plate" + index;
+      namePlate.textContent = textBoxValue;
+      return namePlate;
+    }
+    function insertPlayerNamePlate(namePlate, index) {
+      const flexBarContainer = document.querySelector(".player-bar");
+      const form = document.getElementById("player-form" + index);
+      flexBarContainer.insertBefore(namePlate, form);
+    }
     // function deleteNamePlates
     // const reset
 
