@@ -367,6 +367,12 @@ GameBoardDisplay.eraseContentFromAllCells();
       button.addEventListener("click", handleEvent);
       return button;
     }
+    function handleEvent(event) {
+      const index = event.dataset.index;
+      const form = document.getElementById("player-form" + index);
+      const textBoxValue = form[0].value;
+      if (textBoxValue) switchFormToNamePlate(textBoxValue);
+    }
     _body.appendChild(playerBarContainer());
   })();
 
