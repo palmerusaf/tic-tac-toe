@@ -350,6 +350,14 @@ function buildPlayerForm(index){
   playerForm.appendChild(buildSetPlayerNameButton(index));
   return playerForm;
 }
+function buildPlayerEntryBox(index){
+  const entryBox=document.createElement("input");
+  entryBox.className="player-bar__entry-box"
+  entryBox.type="text";
+  entryBox.placeholder=`Enter name for Player ${index+1}.`;
+  entryBox.required=true;
+return entryBox;
+}
 _body.appendChild(playerBarContainer());
   })();
 
