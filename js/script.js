@@ -320,6 +320,18 @@ GameBoardDisplay.eraseContentFromAllCells();
     return { winnerMessage, tieMessage };
   })();
 
+  const PlayerBar = (() => {
+const _NUM_OF_PLAYERS=2;
+function playerBarContainer(){
+const container=document.createElement("div");
+container.className="flex player-bar";
+container.appendChild(playerFieldContainer());
+container.appendChild(_Buttons.resetButton());
+return container;
+}
+_body.appendChild(playerBarContainer());
+  })();
+
   return {
     GameBoardDisplay,
     Windows,
