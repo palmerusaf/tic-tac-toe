@@ -220,7 +220,7 @@ const Render = (() => {
     }
 
     function _selectCell(rowIndex, columnIndex) {
-     return document.querySelector(
+      return document.querySelector(
         `.board__cell[data-row='${rowIndex}'][data-column='${columnIndex}']`
       );
     }
@@ -237,17 +237,17 @@ const Render = (() => {
   })();
 
   const _Buttons = (() => {
-    function _buildButton (label) {
+    function _buildButton(label) {
       const button = document.createElement("button");
       button.className = "button";
       button.textContent = label;
       return button;
-    };
+    }
 
     const resetButton = () => {
       const button = _buildButton("Reset Game");
       button.addEventListener("click", () => {
-GameBoardDisplay.eraseContentFromAllCells();
+        GameBoardDisplay.eraseContentFromAllCells();
         console.log(
           "TODO add callback for resetbutton function in GameController Module"
         );
@@ -264,11 +264,6 @@ GameBoardDisplay.eraseContentFromAllCells();
   })();
 
   const Windows = (() => {
-    const _closeMsgWindow = () => {
-      const window = document.querySelector(".msg-window");
-      window.remove();
-    };
-
     const _messageWindow = (message) => {
       const window = document.createElement("div");
       window.className = "flex-col msg-window";
@@ -276,14 +271,12 @@ GameBoardDisplay.eraseContentFromAllCells();
       const buttonField = _buildButtonField();
       window.appendChild(buttonField);
       return window;
-    };
 
       function _buildButtonField() {
         const buttonField = document.createElement("span");
         buttonField.className = "flex msg-window__button-container";
         _attachButtonsToButtonField(buttonField);
         return buttonField;
-    }
 
         function _attachButtonsToButtonField(buttonField) {
           const resetButton = _Buttons.resetButton();
@@ -292,12 +285,11 @@ GameBoardDisplay.eraseContentFromAllCells();
           _attachMsgWindowPropertiesToButton(okButton);
           buttonField.appendChild(resetButton);
           buttonField.appendChild(okButton);
-    }
 
           function _attachMsgWindowPropertiesToButton(button) {
             button.className += " msg-window__button";
             button.addEventListener("click", _closeMsgWindow);
-            
+
             function _closeMsgWindow() {
               const window = document.querySelector(".msg-window");
               window.remove();
@@ -371,9 +363,19 @@ GameBoardDisplay.eraseContentFromAllCells();
       const index = event.dataset.index;
       const form = document.getElementById("player-form" + index);
       const textBoxValue = form[0].value;
-      if (textBoxValue) switchFormToNamePlate(textBoxValue);
+      if (textBoxValue) switchFormToNamePlate(textBoxValue, index);
     }
+    function switchFormToNamePlate(textBoxValue, index) {
+      buildPlayerNamePlate(textBoxValue,index)
+      deletePlayerForm(index)
+    }
+    // function deletePlayerForm
+    // function buildPlayerNamePlate
+    // function deleteNamePlates
+    // const reset
+
     _body.appendChild(playerBarContainer());
+    return { reset };
   })();
 
   return {
