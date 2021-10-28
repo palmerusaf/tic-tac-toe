@@ -340,6 +340,16 @@ function buildFormArray(){
     buildPlayerForm(index)
   return formArray;
 }
+function buildPlayerForm(index){
+  const playerForm=document.createElement("form")
+  playerForm.className="flex player-bar__player-form"
+  playerForm.id="player-form"+index;
+  playerForm.action="#"
+  playerForm.onsubmit="switchFromToNamePlate();return false"
+  playerForm.appendChild(buildPlayerEntryBox(index));
+  playerForm.appendChild(buildSetPlayerNameButton(index));
+  return playerForm;
+}
 _body.appendChild(playerBarContainer());
   })();
 
