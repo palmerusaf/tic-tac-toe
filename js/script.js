@@ -321,53 +321,53 @@ GameBoardDisplay.eraseContentFromAllCells();
   })();
 
   const PlayerBar = (() => {
-const _NUM_OF_PLAYERS=2;
-function playerBarContainer(){
-const container=document.createElement("div");
-container.className="flex player-bar";
-container.appendChild(playerFieldContainer());
-container.appendChild(_Buttons.resetButton());
-return container;
-}
-function playerFieldContainer(){
-  const container=document.createElement('div');
-  container.className="flex player-bar__player-field";
-  buildFormArray().forEach(form=>container.appendChild(form));
-}
-function buildFormArray(){
-  let formArray=[];
-  for(let index=0;index<_NUM_OF_PLAYERS;index++)
-    buildPlayerForm(index)
-  return formArray;
-}
-function buildPlayerForm(index){
-  const playerForm=document.createElement("form")
-  playerForm.className="flex player-bar__player-form"
-  playerForm.id="player-form"+index;
-  playerForm.action="#"
-  playerForm.onsubmit="return false"
-  playerForm.appendChild(buildPlayerEntryBox(index));
-  playerForm.appendChild(buildSetPlayerNameButton(index));
-  return playerForm;
-}
-function buildPlayerEntryBox(index){
-  const entryBox=document.createElement("input");
-  entryBox.className="player-bar__entry-box"
-  entryBox.type="text";
-  entryBox.placeholder=`Enter name for Player ${index+1}.`;
-  entryBox.required=true;
-return entryBox;
-}
-function buildSetPlayerNameButton(index){
-  const button = document.createElement("input");
-  button.className="button player-bar__set-name-button";
-  button.type="submit";
-  button.value="Set Name";
-  button.dataset.index=index;
-  button.addEventListener("click",switchFormToNamePlate);
-  return button;
-}
-_body.appendChild(playerBarContainer());
+    const _NUM_OF_PLAYERS = 2;
+    function playerBarContainer() {
+      const container = document.createElement("div");
+      container.className = "flex player-bar";
+      container.appendChild(playerFieldContainer());
+      container.appendChild(_Buttons.resetButton());
+      return container;
+    }
+    function playerFieldContainer() {
+      const container = document.createElement("div");
+      container.className = "flex player-bar__player-field";
+      buildFormArray().forEach((form) => container.appendChild(form));
+    }
+    function buildFormArray() {
+      let formArray = [];
+      for (let index = 0; index < _NUM_OF_PLAYERS; index++)
+        buildPlayerForm(index);
+      return formArray;
+    }
+    function buildPlayerForm(index) {
+      const playerForm = document.createElement("form");
+      playerForm.className = "flex player-bar__player-form";
+      playerForm.id = "player-form" + index;
+      playerForm.action = "#";
+      playerForm.onsubmit = "return false";
+      playerForm.appendChild(buildPlayerEntryBox(index));
+      playerForm.appendChild(buildSetPlayerNameButton(index));
+      return playerForm;
+    }
+    function buildPlayerEntryBox(index) {
+      const entryBox = document.createElement("input");
+      entryBox.className = "player-bar__entry-box";
+      entryBox.type = "text";
+      entryBox.placeholder = `Enter name for Player ${index + 1}.`;
+      entryBox.required = true;
+      return entryBox;
+    }
+    function buildSetPlayerNameButton(index) {
+      const button = document.createElement("input");
+      button.className = "button player-bar__set-name-button";
+      button.type = "submit";
+      button.value = "Set Name";
+      button.dataset.index = index;
+      button.addEventListener("click", handleEvent);
+      return button;
+    }
+    _body.appendChild(playerBarContainer());
   })();
 
   return {
