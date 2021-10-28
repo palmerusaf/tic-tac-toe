@@ -329,6 +329,11 @@ container.appendChild(playerFieldContainer());
 container.appendChild(_Buttons.resetButton());
 return container;
 }
+function playerFieldContainer(){
+  const container=document.createElement('div');
+  container.className="flex player-bar__player-field";
+  buildFormArray().forEach(form=>container.appendChild(form));
+}
 _body.appendChild(playerBarContainer());
   })();
 
