@@ -392,8 +392,11 @@ const Render = (() => {
       const form = document.getElementById("player-form" + index);
       flexBarContainer.insertBefore(namePlate, form);
     }
-    // function deleteNamePlates
-    // const reset
+    const reset = () => {
+      const oldPlayerBarContainer = document.querySelector(".player-bar");
+      oldPlayerBarContainer.remove();
+      _body.appendChild(playerBarContainer());
+    };
 
     _body.appendChild(playerBarContainer());
     return { reset };
