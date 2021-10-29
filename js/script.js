@@ -248,6 +248,7 @@ const Render = (() => {
       const button = _buildButton("Reset Game");
       button.addEventListener("click", () => {
         GameBoardDisplay.eraseContentFromAllCells();
+        PlayerBar.reset();
         console.log(
           "TODO add callback for resetbutton function in GameController Module"
         );
@@ -325,11 +326,12 @@ const Render = (() => {
       const container = document.createElement("div");
       container.className = "flex player-bar__player-field";
       buildFormArray().forEach((form) => container.appendChild(form));
+      return container;
     }
     function buildFormArray() {
       let formArray = [];
       for (let index = 0; index < _NUM_OF_PLAYERS; index++)
-        buildPlayerForm(index);
+        formArray.push(buildPlayerForm(index));
       return formArray;
     }
     function buildPlayerForm(index) {
@@ -346,7 +348,7 @@ const Render = (() => {
       const entryBox = document.createElement("input");
       entryBox.className = "player-bar__entry-box";
       entryBox.type = "text";
-      entryBox.placeholder = `Enter name for Player ${index + 1}.`;
+      entryBox.placeholder = `Enter name for Player ${index + 1}`;
       entryBox.required = true;
       return entryBox;
     }
@@ -360,13 +362,13 @@ const Render = (() => {
       return button;
     }
     function handleButtonEvent(event) {
-      const index = event.dataset.index;
+      const index = event.target.dataset.index;
       const form = document.getElementById("player-form" + index);
       const textBoxValue = form[0].value;
       if (textBoxValue) {
         switchFormToNamePlate(textBoxValue, index);
         console.log(
-          "insert GameController.players[index].setAlias(textBoxValue) here:" +
+          "insert GameController.players[index].setAlias(textBoxValue) here:",
             handleButtonEvent
         );
       }
@@ -388,9 +390,9 @@ const Render = (() => {
       return namePlate;
     }
     function insertPlayerNamePlate(namePlate, index) {
-      const flexBarContainer = document.querySelector(".player-bar");
+      const playerFieldContainer = document.querySelector(".player-bar__player-field");
       const form = document.getElementById("player-form" + index);
-      flexBarContainer.insertBefore(namePlate, form);
+      playerFieldContainer.insertBefore(namePlate, form);
     }
     const reset = () => {
       const oldPlayerBarContainer = document.querySelector(".player-bar");
