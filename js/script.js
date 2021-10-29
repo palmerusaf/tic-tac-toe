@@ -369,7 +369,7 @@ const Render = (() => {
         switchFormToNamePlate(textBoxValue, index);
         console.log(
           "insert GameController.players[index].setAlias(textBoxValue) here:",
-            handleButtonEvent
+          handleButtonEvent
         );
       }
     }
@@ -390,7 +390,9 @@ const Render = (() => {
       return namePlate;
     }
     function insertPlayerNamePlate(namePlate, index) {
-      const playerFieldContainer = document.querySelector(".player-bar__player-field");
+      const playerFieldContainer = document.querySelector(
+        ".player-bar__player-field"
+      );
       const form = document.getElementById("player-form" + index);
       playerFieldContainer.insertBefore(namePlate, form);
     }
