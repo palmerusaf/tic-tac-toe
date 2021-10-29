@@ -213,10 +213,7 @@ const Render = (() => {
     }
 
     function _addEventToCell(cell) {
-      cell.addEventListener("click", (e) => {
-        console.log("GameController.onClick");
-        console.log(e);
-      });
+      cell.addEventListener("click", GameController.handleBoardCellClickEvent);
     }
 
     function _selectCell(rowIndex, columnIndex) {
@@ -246,13 +243,7 @@ const Render = (() => {
 
     const resetButton = () => {
       const button = _buildButton("Reset Game");
-      button.addEventListener("click", () => {
-        GameBoardDisplay.eraseContentFromAllCells();
-        PlayerBar.reset();
-        console.log(
-          "TODO add callback for resetbutton function in GameController Module"
-        );
-      });
+      button.addEventListener("click", GameController.resetGame);
       return button;
     };
 
@@ -341,7 +332,7 @@ const Render = (() => {
       playerForm.action = "#";
       playerForm.onsubmit = "return false";
       playerForm.appendChild(buildPlayerEntryBox(index));
-      playerForm.appendChild(buildSetPlayerNameButton(index));
+      playerForm.appendChild(buildSetPlayerAliasButton(index));
       return playerForm;
     }
     function buildPlayerEntryBox(index) {
@@ -352,7 +343,7 @@ const Render = (() => {
       entryBox.required = true;
       return entryBox;
     }
-    function buildSetPlayerNameButton(index) {
+    function buildSetPlayerAliasButton(index) {
       const button = document.createElement("input");
       button.className = "button player-bar__set-name-button";
       button.type = "submit";
@@ -367,10 +358,7 @@ const Render = (() => {
       const textBoxValue = form[0].value;
       if (textBoxValue) {
         switchFormToNamePlate(textBoxValue, index);
-        console.log(
-          "insert GameController.players[index].setAlias(textBoxValue) here:",
-          handleButtonEvent
-        );
+        GameController.setPlayerAlias(textBoxValue,index);
       }
     }
     function switchFormToNamePlate(textBoxValue, index) {
@@ -536,8 +524,16 @@ const GameController = (() => {
       _players.push(player);
     }
   })();
+const setPlayerAlias=(playerAlias,playerIndex)=>
+  _players[playerIndex].setAlias(playerAlias);
+
+  return {
+    setPlayerAlias,
+    getNumOfPlayers,
+    handleBoardCellClickEvent,
+    resetGame,
+  };
 })();
 //GameController Tests
 {
-
 }
