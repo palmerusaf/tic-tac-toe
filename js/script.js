@@ -77,7 +77,7 @@ const GameBoard = (() => {
   const isCellInForwardDiagonal = (rowIndex, columnIndex) =>
     rowIndex + columnIndex === _GRID_SIZE - 1;
 
-  const resetArray = () => {
+  const reset = () => {
     _cells.forEach((cell) => cell.resetCell());
   };
 
@@ -109,7 +109,7 @@ const GameBoard = (() => {
   const getGridSize = () => _GRID_SIZE;
 
   return {
-    resetArray,
+    reset,
     isCellInBackDiagonal,
     isCellInForwardDiagonal,
     setCellContent,
@@ -225,12 +225,12 @@ const Render = (() => {
     const displayContentToCell = (rowIndex, columnIndex, mark) =>
       (_selectCell(rowIndex, columnIndex).textContent = mark);
 
-    const eraseContentFromAllCells = () => {
+    const reset = () => {
       [...document.querySelectorAll(".board__cell")].forEach(
         (cell) => (cell.textContent = "")
       );
     };
-    return { displayContentToCell, eraseContentFromAllCells };
+    return { displayContentToCell, reset };
   })();
 
   const _Buttons = (() => {
@@ -243,7 +243,7 @@ const Render = (() => {
 
     const resetButton = () => {
       const button = _buildButton("Reset Game");
-      button.addEventListener("click", GameController.resetGame);
+      button.addEventListener("click", GameController.resetGame());
       return button;
     };
 
@@ -305,7 +305,7 @@ const Render = (() => {
   })();
 
   const PlayerBar = (() => {
-    const _NUM_OF_PLAYERS = 2;
+    const _NUM_OF_PLAYERS = GameController.getNumOfPlayers();
     function playerBarContainer() {
       const container = document.createElement("div");
       container.className = "flex player-bar";
@@ -358,7 +358,7 @@ const Render = (() => {
       const textBoxValue = form[0].value;
       if (textBoxValue) {
         switchFormToNamePlate(textBoxValue, index);
-        GameController.setPlayerAlias(textBoxValue,index);
+        GameController.setPlayerAlias(textBoxValue, index);
       }
     }
     function switchFormToNamePlate(textBoxValue, index) {
@@ -397,6 +397,7 @@ const Render = (() => {
   return {
     GameBoardDisplay,
     Windows,
+    PlayerBar,
   };
 })();
 // Render Tests
@@ -524,8 +525,16 @@ const GameController = (() => {
       _players.push(player);
     }
   })();
-const setPlayerAlias=(playerAlias,playerIndex)=>
-  _players[playerIndex].setAlias(playerAlias);
+  const setPlayerAlias = (playerAlias, playerIndex) =>
+    _players[playerIndex].setAlias(playerAlias);
+
+  const getNumOfPlayers = () => _NUM_OF_PLAYERS;
+
+  const resetGame = () => {
+    GameBoard.reset();
+    Render.GameBoardDisplay.reset();
+    Render.PlayerBar.reset();
+  };
 
   return {
     setPlayerAlias,
