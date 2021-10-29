@@ -187,110 +187,228 @@ const GameBoard = (() => {
 // Render module handles all DOM access and initialization
 const Render = (() => {
   const _body = document.querySelector("body");
-  const _board = document.createElement("div");
-  _board.className = "flex board";
-  _body.appendChild(_board);
 
-  const _buildCell = (row, column) => {
-    const cell = document.createElement("div");
-    cell.className = "flex board__cell";
-    cell.style.width = `${100 / GameBoard.getGridSize()}%`;
-    cell.style.height = `${100 / GameBoard.getGridSize()}%`;
-    cell.dataset.row = row;
-    cell.dataset.column = column;
-    return cell;
-  };
+  const GameBoardDisplay = (() => {
+    const _board = document.createElement("div");
+    _board.className = "flex board";
+    _body.appendChild(_board);
 
-  const _addEventToCell = (cell) => {
-    cell.addEventListener("click", (e) => {
-      console.log("GameController.onClick");
-      console.log(e);
-    });
-  };
+    const _initCells = (() => {
+      for (let row = 0; row < GameBoard.getGridSize(); row++)
+        for (let column = 0; column < GameBoard.getGridSize(); column++) {
+          const cell = _buildCell(row, column);
+          _addEventToCell(cell);
+          _board.appendChild(cell);
+        }
+    })();
 
-  const _initCells = (() => {
-    for (let row = 0; row < GameBoard.getGridSize(); row++)
-      for (let column = 0; column < GameBoard.getGridSize(); column++) {
-        const cell = _buildCell(row, column);
-        _addEventToCell(cell);
-        _board.appendChild(cell);
-      }
+    function _buildCell(row, column) {
+      const cell = document.createElement("div");
+      cell.className = "flex board__cell";
+      cell.style.width = `${100 / GameBoard.getGridSize()}%`;
+      cell.style.height = `${100 / GameBoard.getGridSize()}%`;
+      cell.dataset.row = row;
+      cell.dataset.column = column;
+      return cell;
+    }
+
+    function _addEventToCell(cell) {
+      cell.addEventListener("click", (e) => {
+        console.log("GameController.onClick");
+        console.log(e);
+      });
+    }
+
+    function _selectCell(rowIndex, columnIndex) {
+      return document.querySelector(
+        `.board__cell[data-row='${rowIndex}'][data-column='${columnIndex}']`
+      );
+    }
+
+    const displayContentToCell = (rowIndex, columnIndex, mark) =>
+      (_selectCell(rowIndex, columnIndex).textContent = mark);
+
+    const eraseContentFromAllCells = () => {
+      [...document.querySelectorAll(".board__cell")].forEach(
+        (cell) => (cell.textContent = "")
+      );
+    };
+    return { displayContentToCell, eraseContentFromAllCells };
   })();
 
-  const _selectCell = (rowIndex, columnIndex) =>
-    document.querySelector(
-      `.board__cell[data-row='${rowIndex}'][data-column='${columnIndex}']`
-    );
+  const _Buttons = (() => {
+    function _buildButton(label) {
+      const button = document.createElement("button");
+      button.className = "button";
+      button.textContent = label;
+      return button;
+    }
 
-  const displayContentToCell = (rowIndex, columnIndex, mark) =>
-    (_selectCell(rowIndex, columnIndex).textContent = mark);
+    const resetButton = () => {
+      const button = _buildButton("Reset Game");
+      button.addEventListener("click", () => {
+        GameBoardDisplay.eraseContentFromAllCells();
+        PlayerBar.reset();
+        console.log(
+          "TODO add callback for resetbutton function in GameController Module"
+        );
+      });
+      return button;
+    };
 
-  const eraseContentFromAllCells = () => {
-    [...document.querySelectorAll(".board__cell")].forEach(
-      (cell) => (cell.textContent = "")
-    );
-  };
+    const okButton = () => {
+      const button = _buildButton("OK");
+      return button;
+    };
 
-  const _resetButton = () => {
-    const button = document.createElement("button");
-    button.className = "button";
-    button.textContent = "Reset Game";
-    button.addEventListener("click", () => {
-      eraseContentFromAllCells();
-      console.log(
-        "TODO add callback for resetbutton function in GameController Module"
+    return { resetButton, okButton };
+  })();
+
+  const Windows = (() => {
+    const _messageWindow = (message) => {
+      const window = document.createElement("div");
+      window.className = "flex-col msg-window";
+      window.textContent = message;
+      const buttonField = _buildButtonField();
+      window.appendChild(buttonField);
+      return window;
+
+      function _buildButtonField() {
+        const buttonField = document.createElement("span");
+        buttonField.className = "flex msg-window__button-container";
+        _attachButtonsToButtonField(buttonField);
+        return buttonField;
+
+        function _attachButtonsToButtonField(buttonField) {
+          const resetButton = _Buttons.resetButton();
+          _attachMsgWindowPropertiesToButton(resetButton);
+          const okButton = _Buttons.okButton();
+          _attachMsgWindowPropertiesToButton(okButton);
+          buttonField.appendChild(resetButton);
+          buttonField.appendChild(okButton);
+
+          function _attachMsgWindowPropertiesToButton(button) {
+            button.className += " msg-window__button";
+            button.addEventListener("click", _closeMsgWindow);
+
+            function _closeMsgWindow() {
+              const window = document.querySelector(".msg-window");
+              window.remove();
+            }
+          }
+        }
+      }
+    };
+
+    const winnerMessage = (winner) =>
+      _body.appendChild(
+        _messageWindow(`Congratulations ${winner}, you have won!!!`)
       );
-    });
-    return button;
-  };
-  _body.appendChild(_resetButton());
 
-  const _okButton = () => {
-    const button = document.createElement("button");
-    button.className = "button";
-    button.addEventListener("click", _closeMsgWindow);
-    return button;
-  };
+    const tieMessage = () =>
+      _body.appendChild(
+        _messageWindow("No more moves available. The game has ended in a tie.")
+      );
 
-  const _closeMsgWindow = () => {
-    const window = document.querySelector(".msg-window");
-    window.remove();
-  };
+    return { winnerMessage, tieMessage };
+  })();
 
-  const _messageWindow = (message) => {
-    const window = document.createElement("div");
-    window.className = "flex-col msg-window";
-    window.textContent = message;
-    const buttonContainer = document.createElement("span");
-    buttonContainer.className = "flex msg-window__button-container";
-    const resetButton = _resetButton();
-    resetButton.className += " msg-window__button";
-    resetButton.addEventListener("click", _closeMsgWindow);
-    const okButton = _okButton();
-    okButton.className += " msg-window__button";
-    okButton.textContent = "OK";
+  const PlayerBar = (() => {
+    const _NUM_OF_PLAYERS = 2;
+    function playerBarContainer() {
+      const container = document.createElement("div");
+      container.className = "flex player-bar";
+      container.appendChild(playerFieldContainer());
+      container.appendChild(_Buttons.resetButton());
+      return container;
+    }
+    function playerFieldContainer() {
+      const container = document.createElement("div");
+      container.className = "flex player-bar__player-field";
+      buildFormArray().forEach((form) => container.appendChild(form));
+      return container;
+    }
+    function buildFormArray() {
+      let formArray = [];
+      for (let index = 0; index < _NUM_OF_PLAYERS; index++)
+        formArray.push(buildPlayerForm(index));
+      return formArray;
+    }
+    function buildPlayerForm(index) {
+      const playerForm = document.createElement("form");
+      playerForm.className = "flex player-bar__player-form";
+      playerForm.id = "player-form" + index;
+      playerForm.action = "#";
+      playerForm.onsubmit = "return false";
+      playerForm.appendChild(buildPlayerEntryBox(index));
+      playerForm.appendChild(buildSetPlayerNameButton(index));
+      return playerForm;
+    }
+    function buildPlayerEntryBox(index) {
+      const entryBox = document.createElement("input");
+      entryBox.className = "player-bar__entry-box";
+      entryBox.type = "text";
+      entryBox.placeholder = `Enter name for Player ${index + 1}`;
+      entryBox.required = true;
+      return entryBox;
+    }
+    function buildSetPlayerNameButton(index) {
+      const button = document.createElement("input");
+      button.className = "button player-bar__set-name-button";
+      button.type = "submit";
+      button.value = "Set Name";
+      button.dataset.index = index;
+      button.addEventListener("click", handleButtonEvent);
+      return button;
+    }
+    function handleButtonEvent(event) {
+      const index = event.target.dataset.index;
+      const form = document.getElementById("player-form" + index);
+      const textBoxValue = form[0].value;
+      if (textBoxValue) {
+        switchFormToNamePlate(textBoxValue, index);
+        console.log(
+          "insert GameController.players[index].setAlias(textBoxValue) here:",
+          handleButtonEvent
+        );
+      }
+    }
+    function switchFormToNamePlate(textBoxValue, index) {
+      const namePlate = buildPlayerNamePlate(textBoxValue, index);
+      insertPlayerNamePlate(namePlate, index);
 
-    buttonContainer.appendChild(resetButton);
-    buttonContainer.appendChild(okButton);
-    window.appendChild(buttonContainer);
-    return window;
-  };
+      deletePlayerForm(index);
+    }
+    function deletePlayerForm(index) {
+      document.getElementById("player-form" + index).remove();
+    }
+    function buildPlayerNamePlate(textBoxValue, index) {
+      const namePlate = document.createElement("div");
+      namePlate.className = "player-bar__name-plate";
+      namePlate.id = "player-name-plate" + index;
+      namePlate.textContent = textBoxValue;
+      return namePlate;
+    }
+    function insertPlayerNamePlate(namePlate, index) {
+      const playerFieldContainer = document.querySelector(
+        ".player-bar__player-field"
+      );
+      const form = document.getElementById("player-form" + index);
+      playerFieldContainer.insertBefore(namePlate, form);
+    }
+    const reset = () => {
+      const oldPlayerBarContainer = document.querySelector(".player-bar");
+      oldPlayerBarContainer.remove();
+      _body.appendChild(playerBarContainer());
+    };
 
-  const winnerMessage = (winner) =>
-    _body.appendChild(
-      _messageWindow(`Congratulations ${winner}, you have won!!!`)
-    );
-
-  const tieMessage = () =>
-    _body.appendChild(
-      _messageWindow("No more moves available. The game has ended in a tie.")
-    );
+    _body.appendChild(playerBarContainer());
+    return { reset };
+  })();
 
   return {
-    displayContentToCell,
-    eraseContentFromAllCells,
-    winnerMessage,
-    tieMessage,
+    GameBoardDisplay,
+    Windows,
   };
 })();
 // Render Tests
