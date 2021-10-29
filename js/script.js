@@ -220,7 +220,7 @@ const Render = (() => {
     }
 
     function _selectCell(rowIndex, columnIndex) {
-     return document.querySelector(
+      return document.querySelector(
         `.board__cell[data-row='${rowIndex}'][data-column='${columnIndex}']`
       );
     }
@@ -237,17 +237,18 @@ const Render = (() => {
   })();
 
   const _Buttons = (() => {
-    function _buildButton (label) {
+    function _buildButton(label) {
       const button = document.createElement("button");
       button.className = "button";
       button.textContent = label;
       return button;
-    };
+    }
 
     const resetButton = () => {
       const button = _buildButton("Reset Game");
       button.addEventListener("click", () => {
-GameBoardDisplay.eraseContentFromAllCells();
+        GameBoardDisplay.eraseContentFromAllCells();
+        PlayerBar.reset();
         console.log(
           "TODO add callback for resetbutton function in GameController Module"
         );
@@ -264,11 +265,6 @@ GameBoardDisplay.eraseContentFromAllCells();
   })();
 
   const Windows = (() => {
-    const _closeMsgWindow = () => {
-      const window = document.querySelector(".msg-window");
-      window.remove();
-    };
-
     const _messageWindow = (message) => {
       const window = document.createElement("div");
       window.className = "flex-col msg-window";
@@ -276,14 +272,12 @@ GameBoardDisplay.eraseContentFromAllCells();
       const buttonField = _buildButtonField();
       window.appendChild(buttonField);
       return window;
-    };
 
       function _buildButtonField() {
         const buttonField = document.createElement("span");
         buttonField.className = "flex msg-window__button-container";
         _attachButtonsToButtonField(buttonField);
         return buttonField;
-    }
 
         function _attachButtonsToButtonField(buttonField) {
           const resetButton = _Buttons.resetButton();
@@ -292,12 +286,11 @@ GameBoardDisplay.eraseContentFromAllCells();
           _attachMsgWindowPropertiesToButton(okButton);
           buttonField.appendChild(resetButton);
           buttonField.appendChild(okButton);
-    }
 
           function _attachMsgWindowPropertiesToButton(button) {
             button.className += " msg-window__button";
             button.addEventListener("click", _closeMsgWindow);
-            
+
             function _closeMsgWindow() {
               const window = document.querySelector(".msg-window");
               window.remove();
@@ -318,6 +311,99 @@ GameBoardDisplay.eraseContentFromAllCells();
       );
 
     return { winnerMessage, tieMessage };
+  })();
+
+  const PlayerBar = (() => {
+    const _NUM_OF_PLAYERS = 2;
+    function playerBarContainer() {
+      const container = document.createElement("div");
+      container.className = "flex player-bar";
+      container.appendChild(playerFieldContainer());
+      container.appendChild(_Buttons.resetButton());
+      return container;
+    }
+    function playerFieldContainer() {
+      const container = document.createElement("div");
+      container.className = "flex player-bar__player-field";
+      buildFormArray().forEach((form) => container.appendChild(form));
+      return container;
+    }
+    function buildFormArray() {
+      let formArray = [];
+      for (let index = 0; index < _NUM_OF_PLAYERS; index++)
+        formArray.push(buildPlayerForm(index));
+      return formArray;
+    }
+    function buildPlayerForm(index) {
+      const playerForm = document.createElement("form");
+      playerForm.className = "flex player-bar__player-form";
+      playerForm.id = "player-form" + index;
+      playerForm.action = "#";
+      playerForm.onsubmit = "return false";
+      playerForm.appendChild(buildPlayerEntryBox(index));
+      playerForm.appendChild(buildSetPlayerNameButton(index));
+      return playerForm;
+    }
+    function buildPlayerEntryBox(index) {
+      const entryBox = document.createElement("input");
+      entryBox.className = "player-bar__entry-box";
+      entryBox.type = "text";
+      entryBox.placeholder = `Enter name for Player ${index + 1}`;
+      entryBox.required = true;
+      return entryBox;
+    }
+    function buildSetPlayerNameButton(index) {
+      const button = document.createElement("input");
+      button.className = "button player-bar__set-name-button";
+      button.type = "submit";
+      button.value = "Set Name";
+      button.dataset.index = index;
+      button.addEventListener("click", handleButtonEvent);
+      return button;
+    }
+    function handleButtonEvent(event) {
+      const index = event.target.dataset.index;
+      const form = document.getElementById("player-form" + index);
+      const textBoxValue = form[0].value;
+      if (textBoxValue) {
+        switchFormToNamePlate(textBoxValue, index);
+        console.log(
+          "insert GameController.players[index].setAlias(textBoxValue) here:",
+          handleButtonEvent
+        );
+      }
+    }
+    function switchFormToNamePlate(textBoxValue, index) {
+      const namePlate = buildPlayerNamePlate(textBoxValue, index);
+      insertPlayerNamePlate(namePlate, index);
+
+      deletePlayerForm(index);
+    }
+    function deletePlayerForm(index) {
+      document.getElementById("player-form" + index).remove();
+    }
+    function buildPlayerNamePlate(textBoxValue, index) {
+      const namePlate = document.createElement("div");
+      namePlate.className = "player-bar__name-plate";
+      namePlate.id = "player-name-plate" + index;
+      namePlate.textContent = textBoxValue;
+      return namePlate;
+    }
+    function insertPlayerNamePlate(namePlate, index) {
+      const playerFieldContainer = document.querySelector(
+        ".player-bar__player-field"
+      );
+      const form = document.getElementById("player-form" + index);
+      playerFieldContainer.insertBefore(namePlate, form);
+    }
+    const reset = () => {
+      const oldPlayerBarContainer = document.querySelector(".player-bar");
+      oldPlayerBarContainer.remove();
+      _body.appendChild(playerBarContainer());
+    };
+
+    _body.appendChild(playerBarContainer());
+    return { reset };
   })();
 
   return {
