@@ -51,6 +51,8 @@ const GameBoard = (() => {
   const _GRID_SIZE = 3;
   let _cells = [];
 
+  const getGridSize = () => _GRID_SIZE;
+
   const _initCellArray = () => {
     for (let rowIndex = 0; rowIndex < _GRID_SIZE; rowIndex++)
       for (let columnIndex = 0; columnIndex < _GRID_SIZE; ++columnIndex)
@@ -59,17 +61,11 @@ const GameBoard = (() => {
   };
   _cells = _initCellArray();
 
-  const _getCell = (rowIndex, columnIndex) =>
+  const getCell = (rowIndex, columnIndex) =>
     _cells.filter(
       (cell) =>
         cell.getRowIndex() === rowIndex && cell.getColumnIndex() === columnIndex
     )[0];
-
-  const setCellContent = (rowIndex, columnIndex, mark) =>
-    _getCell(rowIndex, columnIndex).setContent(mark);
-
-  const getCellContent = (rowIndex, columnIndex) =>
-    _getCell(rowIndex, columnIndex).getContent();
 
   const isCellInBackDiagonal = (rowIndex, columnIndex) =>
     rowIndex === columnIndex;
@@ -77,90 +73,110 @@ const GameBoard = (() => {
   const isCellInForwardDiagonal = (rowIndex, columnIndex) =>
     rowIndex + columnIndex === _GRID_SIZE - 1;
 
+  const GetNeighbors = (() => {
+    const getColumnContent = (columnIndex) =>
+      _getCellsWithProp("column", columnIndex).map((cell) => cell.getContent());
+
+    const getRowContent = (rowIndex) =>
+      _getCellsWithProp("row", rowIndex).map((cell) => cell.getContent());
+
+    const getForwardDiagonalContent = () =>
+      _getCellsWithProp("forwardDiagonal").map((cell) => cell.getContent());
+
+    const getBackDiagonalContent = () =>
+      _getCellsWithProp("backDiagonal").map((cell) => cell.getContent());
+
+    const _getCellsWithProp = (propType, desiredProp) =>
+      _cells.filter((cell) => {
+        if (propType === "column") return cell.getColumnIndex() === desiredProp;
+        if (propType === "row") return cell.getRowIndex() === desiredProp;
+        if (propType === "forwardDiagonal")
+          return isCellInForwardDiagonal(
+            cell.getRowIndex(),
+            cell.getColumnIndex()
+          );
+        if (propType === "backDiagonal")
+          return isCellInBackDiagonal(
+            cell.getRowIndex(),
+            cell.getColumnIndex()
+          );
+      });
+
+    return {
+      getColumnContent,
+      getRowContent,
+      getForwardDiagonalContent,
+      getBackDiagonalContent,
+    };
+  })();
+
   const reset = () => {
     _cells.forEach((cell) => cell.resetCell());
   };
 
-  const _getCellsWithProp = (propType, desiredProp) =>
-    _cells.filter((cell) => {
-      if (propType === "column") return cell.getColumnIndex() === desiredProp;
-      if (propType === "row") return cell.getRowIndex() === desiredProp;
-      if (propType === "forwardDiagonal")
-        return isCellInForwardDiagonal(
-          cell.getRowIndex(),
-          cell.getColumnIndex()
-        );
-      if (propType === "backDiagonal")
-        return isCellInBackDiagonal(cell.getRowIndex(), cell.getColumnIndex());
-    });
-
-  const getColumnContent = (columnIndex) =>
-    _getCellsWithProp("column", columnIndex).map((cell) => cell.getContent());
-
-  const getRowContent = (rowIndex) =>
-    _getCellsWithProp("row", rowIndex).map((cell) => cell.getContent());
-
-  const getForwardDiagonalContent = () =>
-    _getCellsWithProp("forwardDiagonal").map((cell) => cell.getContent());
-
-  const getBackDiagonalContent = () =>
-    _getCellsWithProp("backDiagonal").map((cell) => cell.getContent());
-
-  const getGridSize = () => _GRID_SIZE;
-
   return {
-    reset,
+    getGridSize,
+    getCell,
     isCellInBackDiagonal,
     isCellInForwardDiagonal,
-    setCellContent,
-    getCellContent,
-    getColumnContent,
-    getRowContent,
-    getForwardDiagonalContent,
-    getBackDiagonalContent,
-    getGridSize,
+    GetNeighbors,
+    reset,
   };
 })();
 // GameBoard Tests
 {
   /*
-  console.log("resetArray() tests");
-  GameBoard.cells[1].setContent("X");
-  GameBoard.cells.forEach((cell) => console.log(cell.getIsPlayed()));
-  GameBoard.resetArray();
-  GameBoard.cells.forEach((cell) => console.log(cell.getIsPlayed()));
+  console.log("reset() tests");
+  GameBoard.getCell(0, 1).setContent("X");
+  GameBoard.getCell(1, 1).setContent("O");
+  GameBoard.getCell(2, 1).setContent("X");
+  console.log(
+    GameBoard.getCell(0, 1).getContent(),
+    GameBoard.getCell(1, 1).getContent(),
+    GameBoard.getCell(2, 1).getContent()
+  );
+  GameBoard.reset();
+  console.log(
+    GameBoard.getCell(0, 1).getContent(),
+    GameBoard.getCell(1, 1).getContent(),
+    GameBoard.getCell(2, 1).getContent()
+  );
   //*/
   /*
-  console.log("getRowContent tests"); 
-  GameBoard.setCellContent(1, 0, "X");
-  GameBoard.setCellContent(1, 1, "O");
-  GameBoard.setCellContent(1, 2, "X");
-  console.log(GameBoard.getRowContent(1));
-  console.log(GameBoard.getRowContent(2));
+  console.log("getRowContent tests");
+  GameBoard.getCell(1, 0).setContent("X");
+  GameBoard.getCell(1, 1).setContent("O");
+  GameBoard.getCell(1, 2).setContent("X");
+  console.log(GameBoard.GetNeighbors.getRowContent(1));
+  console.log(GameBoard.GetNeighbors.getRowContent(2));
+  GameBoard.reset();
   //*/
   /*
   console.log("getColumnContent tests");
-  GameBoard.setCellContent(0, 1, "X");
-  GameBoard.setCellContent(1, 1, "O");
-  GameBoard.setCellContent(2, 1, "X");
-  console.log(GameBoard.getColumnContent(1));
-  console.log(GameBoard.getColumnContent(2));
+  GameBoard.getCell(0, 1).setContent("X");
+  GameBoard.getCell(1, 1).setContent("O");
+  GameBoard.getCell(2, 1).setContent("X");
+  console.log(GameBoard.GetNeighbors.getColumnContent(1));
+  console.log(GameBoard.GetNeighbors.getColumnContent(2));
+  GameBoard.reset();
   //*/
   /*
   console.log("getForwardDiagonalContent tests");
-  GameBoard.setCellContent(2, 0, "X");
-  GameBoard.setCellContent(1, 1, "O");
-  GameBoard.setCellContent(0, 2, "X");
-  console.log(GameBoard.getForwardDiagonalContent());
-  console.log(GameBoard.getBackDiagonalContent());
+  GameBoard.getCell(2, 0).setContent("X");
+  GameBoard.getCell(1, 1).setContent("O");
+  GameBoard.getCell(0, 2).setContent("X");
+  console.log(GameBoard.GetNeighbors.getForwardDiagonalContent());
+  console.log(GameBoard.GetNeighbors.getBackDiagonalContent());
+  GameBoard.reset();
   //*/
   /*
   console.log("getBackDiagonalContent tests");
-  GameBoard.setCellContent(0, 0, "X");
-  GameBoard.setCellContent(1, 1, "O");
-  GameBoard.setCellContent(2, 2, "X");
-  console.log(GameBoard.getBackDiagonalContent());
-  console.log(GameBoard.getForwardDiagonalContent());
+  GameBoard.getCell(0, 0).setContent("X");
+  GameBoard.getCell(1, 1).setContent("O");
+  GameBoard.getCell(2, 2).setContent("X");
+  console.log(GameBoard.GetNeighbors.getBackDiagonalContent());
+  console.log(GameBoard.GetNeighbors.getForwardDiagonalContent());
+  GameBoard.reset();
   //*/
   /*
   console.log("isCellInForwardDiagonal tests");
@@ -168,6 +184,7 @@ const GameBoard = (() => {
   console.log(GameBoard.isCellInForwardDiagonal(1, 1));
   console.log(GameBoard.isCellInForwardDiagonal(2, 0));
   console.log(GameBoard.isCellInForwardDiagonal(2, 1));
+  GameBoard.reset();
   //*/
   /*
   console.log("isCellInBackDiagonal tests");
@@ -175,6 +192,7 @@ const GameBoard = (() => {
   console.log(GameBoard.isCellInBackDiagonal(1, 1));
   console.log(GameBoard.isCellInBackDiagonal(2, 2));
   console.log(GameBoard.isCellInBackDiagonal(1, 2));
+  GameBoard.reset();
   //*/
   /*
   console.log("get/setCellContent tests");
@@ -213,7 +231,12 @@ const Render = (() => {
     }
 
     function _addEventToCell(cell) {
-      cell.addEventListener("click", GameController.handleBoardCellClickEvent);
+      cell.addEventListener("click", (e) =>
+        GameController.handleBoardCellClickEvent(
+          e.target.dataset.row,
+          e.target.dataset.column
+        )
+      );
     }
 
     function _selectCell(rowIndex, columnIndex) {
@@ -530,11 +553,15 @@ const GameController = (() => {
 
   const getNumOfPlayers = () => _NUM_OF_PLAYERS;
 
+  // function allPlayerNamesSet
+
   const resetGame = () => {
     GameBoard.reset();
     Render.GameBoardDisplay.reset();
     Render.PlayerBar.reset();
   };
+
+  const handleBoardCellClickEvent = (clickedRow, clickedColumn) => {};
 
   return {
     setPlayerAlias,
