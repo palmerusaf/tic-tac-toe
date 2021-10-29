@@ -356,22 +356,25 @@ const Render = (() => {
       button.type = "submit";
       button.value = "Set Name";
       button.dataset.index = index;
-      button.addEventListener("click", handleEvent);
+      button.addEventListener("click", handleButtonEvent);
       return button;
     }
-    function handleEvent(event) {
+    function handleButtonEvent(event) {
       const index = event.dataset.index;
       const form = document.getElementById("player-form" + index);
       const textBoxValue = form[0].value;
-      if (textBoxValue) switchFormToNamePlate(textBoxValue, index);
+      if (textBoxValue) {
+        switchFormToNamePlate(textBoxValue, index);
+        console.log(
+          "insert GameController.players[index].setAlias(textBoxValue) here:" +
+            handleButtonEvent
+        );
+      }
     }
     function switchFormToNamePlate(textBoxValue, index) {
       const namePlate = buildPlayerNamePlate(textBoxValue, index);
       insertPlayerNamePlate(namePlate, index);
-      console.log(
-        "insert GameController.players[index].setAlias(textBoxValue) here:" +
-          switchFormToNamePlate
-      );
+
       deletePlayerForm(index);
     }
     function deletePlayerForm(index) {
