@@ -325,6 +325,18 @@ const PlayerController = (() => {
 
   const getActivePlayerIndex = () => _players.indexOf(getActivePlayer());
 
+  const cycleActivePlayerToNextPlayer = () => {
+    if (getActivePlayerIndex() === _players.length - 1) {
+      _players[0].setIsActiveStatus(true);
+      _players[_players.length - 1].setIsActiveStatus(false);
+    } else {
+      const oldActiveIndex = getActivePlayerIndex();
+      const newActiveIndex = oldActiveIndex + 1;
+      _players[oldActiveIndex].setIsActiveStatus(false);
+      _players[newActiveIndex].setIsActiveStatus(true);
+    }
+  };
+
   return {
     getNumOfPlayers,
     getPlayer,
@@ -332,6 +344,7 @@ const PlayerController = (() => {
     areAllPlayerAliasesSet,
     reset,
     getActivePlayerIndex,
+    cycleActivePlayerToNextPlayer,
   };
 })();
 
