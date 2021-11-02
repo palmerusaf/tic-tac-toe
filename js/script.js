@@ -314,7 +314,10 @@ const PlayerController = (() => {
     _players.filter((player) => player.getActivePlayer());
   };
 
-  return { getNumOfPlayers, getPlayer, getActivePlayer };
+  const areAllPlayerAliasesSet = () =>
+    _players.every((player) => player.getAlias !== "");
+
+  return { getNumOfPlayers, getPlayer, getActivePlayer,areAllPlayerAliasesSet };
 })();
 
 // Render module handles all DOM access and initialization
