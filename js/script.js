@@ -451,15 +451,21 @@ const Render = (() => {
 
     function _addEventToCell(cell) {
       cell.addEventListener("click", (e) =>
-        GameController.handleBoardCellClickEvent(
-          e.target.dataset.row,
-          e.target.dataset.column
+        handleBoardCellClickEvent(
+          +e.target.dataset.row,
+          +e.target.dataset.column
         )
       );
     }
 
-    function handleBoardCellClickEvent(rowIndex,columnIndex){
-      
+    function handleBoardCellClickEvent(row, column) {
+      if (PlayerController.areAllPlayerAliasesSet() === false) return;
+      if (GameBoard.getCell(row, column).getIsPlayed()) return;
+
+      const mark = PlayerController.getActivePlayer().getMark();
+      displayContentToCell(row, column, mark);
+      GameBoard.getCell(row, column).setContent(mark);
+      PlayerController.cycleActivePlayerToNextPlayer();
     }
 
     function _selectCell(rowIndex, columnIndex) {
