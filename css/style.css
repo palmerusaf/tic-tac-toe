@@ -10,7 +10,8 @@
   flex-wrap: wrap;
   outline: white solid 1px;
   width: 500px;
-  height: 500px; }
+  height: 500px;
+  margin: 2em; }
   .board__cell {
     outline: black solid 1px;
     justify-content: center;
@@ -21,7 +22,8 @@
 
 .button {
   padding: 2px;
-  width: 90px; }
+  width: 90px;
+  flex: 0 0 auto; }
 
 .msg-window {
   position: absolute;
@@ -36,5 +38,17 @@
     gap: 8px;
     justify-content: center;
     margin-top: 2em; }
+
+.player-bar {
+  justify-content: space-around; }
+  .player-bar__player-form {
+    gap: 8px; }
+  .player-bar__entry-box {
+    width: 11em; }
+  .player-bar__set-name-button {
+    margin-right: 2em; }
+  .player-bar__name-plate {
+    margin: 0 2em;
+    font-family: sans-serif; }
 
 /*# sourceMappingURL=style.css.map */
