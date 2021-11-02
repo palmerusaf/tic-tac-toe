@@ -217,11 +217,11 @@ const Player = () => {
     _mark ? console.log("Error: Player mark already set.") : (_mark = mark);
   const getMark = () => _mark;
 
-  const setIsActive = (bool) =>
+  const setIsActiveStatus = (bool) =>
     bool === _isActive
       ? console.log(`Error: isPlayerTurn already set to ${bool}.`)
       : (_isActive = bool);
-  const getIsActive = () => _isActive;
+  const getIsActiveStatus = () => _isActive;
 
   const setIsWinner = (bool) =>
     bool === _isWinner
@@ -241,8 +241,8 @@ const Player = () => {
     getAlias,
     setMark,
     getMark,
-    getIsActive,
-    setIsActive,
+    getIsActiveStatus,
+    setIsActiveStatus,
     setIsWinner,
     getIsWinner,
     reset,
@@ -304,6 +304,7 @@ const PlayerController = (() => {
     for (let index = 0; index < _NUM_OF_PLAYERS; index++) {
       _players.push(Player());
     }
+    _players[0].setIsActiveStatus(true);
   })();
 
   const getNumOfPlayers = () => _NUM_OF_PLAYERS;
@@ -311,13 +312,24 @@ const PlayerController = (() => {
   const getPlayer = (playerIndex) => _players[playerIndex];
 
   const getActivePlayer = () => {
-    _players.filter((player) => player.getActivePlayer());
+    _players.filter((player) => player.getIsActiveStatus());
   };
 
   const areAllPlayerAliasesSet = () =>
     _players.every((player) => player.getAlias !== "");
 
-  return { getNumOfPlayers, getPlayer, getActivePlayer,areAllPlayerAliasesSet };
+  const reset = () => {
+    _players.forEach((player) => player.reset());
+    _players[0].setIsActiveStatus(true);
+  };
+
+  return {
+    getNumOfPlayers,
+    getPlayer,
+    getActivePlayer,
+    areAllPlayerAliasesSet,
+    reset,
+  };
 })();
 
 // Render module handles all DOM access and initialization
