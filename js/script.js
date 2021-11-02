@@ -451,11 +451,21 @@ const Render = (() => {
 
     function _addEventToCell(cell) {
       cell.addEventListener("click", (e) =>
-        GameController.handleBoardCellClickEvent(
-          e.target.dataset.row,
-          e.target.dataset.column
+        handleBoardCellClickEvent(
+          +e.target.dataset.row,
+          +e.target.dataset.column
         )
       );
+    }
+
+    function handleBoardCellClickEvent(row, column) {
+      if (PlayerController.areAllPlayerAliasesSet() === false) return;
+      if (GameBoard.getCell(row, column).getIsPlayed()) return;
+
+      const mark = PlayerController.getActivePlayer().getMark();
+      displayContentToCell(row, column, mark);
+      GameBoard.getCell(row, column).setContent(mark);
+      PlayerController.cycleActivePlayerToNextPlayer();
     }
 
     function _selectCell(rowIndex, columnIndex) {
@@ -485,8 +495,15 @@ const Render = (() => {
 
     const resetButton = () => {
       const button = _buildButton("Reset Game");
-      button.addEventListener("click", GameController.resetGame());
+      button.addEventListener("click", resetAll);
       return button;
+
+      function resetAll() {
+        GameBoard.reset();
+        PlayerController.reset();
+        GameBoardDisplay.reset();
+        PlayerBar.reset();
+      }
     };
 
     const okButton = () => {
@@ -600,7 +617,7 @@ const Render = (() => {
       const textBoxValue = form[0].value;
       if (textBoxValue) {
         switchFormToNamePlate(textBoxValue, index);
-        GameController.setPlayerAlias(textBoxValue, index);
+        PlayerController.getPlayer(index).setAlias(textBoxValue);
       }
     }
     function switchFormToNamePlate(textBoxValue, index) {
@@ -659,41 +676,4 @@ const Render = (() => {
   Render.displayContentToCell(0, 2, "O");
   Render.eraseContentFromAllCells();
   //*/
-}
-
-// GameController Module handles logic for determining win and servers as go
-// between for Render and GameBoard Module
-const GameController = (() => {
-  const _NUM_OF_PLAYERS = 2;
-  let _players = [];
-  const _initPlayers = (() => {
-    for (let i = 0; i < _NUM_OF_PLAYERS; i++) {
-      const player = Player();
-      _players.push(player);
-    }
-  })();
-  const setPlayerAlias = (playerAlias, playerIndex) =>
-    _players[playerIndex].setAlias(playerAlias);
-
-  const getNumOfPlayers = () => _NUM_OF_PLAYERS;
-
-  // function allPlayerNamesSet
-
-  const resetGame = () => {
-    GameBoard.reset();
-    Render.GameBoardDisplay.reset();
-    Render.PlayerBar.reset();
-  };
-
-  const handleBoardCellClickEvent = (clickedRow, clickedColumn) => {};
-
-  return {
-    setPlayerAlias,
-    getNumOfPlayers,
-    handleBoardCellClickEvent,
-    resetGame,
-  };
-})();
-//GameController Tests
-{
 }
