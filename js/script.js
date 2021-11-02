@@ -206,7 +206,7 @@ const GameBoard = (() => {
 const Player = () => {
   let _alias = "";
   let _mark = "";
-  let _isTurn = false;
+  let _isActive = false;
   let _isWinner = false;
 
   const setAlias = (alias) =>
@@ -217,11 +217,11 @@ const Player = () => {
     _mark ? console.log("Error: Player mark already set.") : (_mark = mark);
   const getMark = () => _mark;
 
-  const setIsTurn = (bool) =>
-    bool === _isTurn
+  const setIsActive = (bool) =>
+    bool === _isActive
       ? console.log(`Error: isPlayerTurn already set to ${bool}.`)
-      : (_isTurn = bool);
-  const getIsTurn = () => _isTurn;
+      : (_isActive = bool);
+  const getIsActive = () => _isActive;
 
   const setIsWinner = (bool) =>
     bool === _isWinner
@@ -232,7 +232,7 @@ const Player = () => {
   const reset = () => {
     _alias = "";
     _mark = "";
-    _isTurn = false;
+    _isActive = false;
     _isWinner = false;
   };
 
@@ -241,8 +241,8 @@ const Player = () => {
     getAlias,
     setMark,
     getMark,
-    getIsTurn,
-    setIsTurn,
+    getIsActive,
+    setIsActive,
     setIsWinner,
     getIsWinner,
     reset,
@@ -310,7 +310,11 @@ const PlayerController = (() => {
 
   const getPlayer = (playerIndex) => _players[playerIndex];
 
-  return { getNumOfPlayers, getPlayer };
+  const getActivePlayer = () => {
+    _players.filter((player) => player.getActivePlayer());
+  };
+
+  return { getNumOfPlayers, getPlayer, getActivePlayer };
 })();
 
 // Render module handles all DOM access and initialization
