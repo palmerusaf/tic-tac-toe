@@ -308,7 +308,9 @@ const PlayerController = (() => {
 
   const getNumOfPlayers = () => _NUM_OF_PLAYERS;
 
-  return { getNumOfPlayers };
+  const getPlayer = (playerIndex) => _players[playerIndex];
+
+  return { getNumOfPlayers, getPlayer };
 })();
 
 // Render module handles all DOM access and initialization
