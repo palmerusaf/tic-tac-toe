@@ -458,6 +458,10 @@ const Render = (() => {
       );
     }
 
+    function handleBoardCellClickEvent(rowIndex,columnIndex){
+      
+    }
+
     function _selectCell(rowIndex, columnIndex) {
       return document.querySelector(
         `.board__cell[data-row='${rowIndex}'][data-column='${columnIndex}']`
@@ -607,7 +611,7 @@ const Render = (() => {
       const textBoxValue = form[0].value;
       if (textBoxValue) {
         switchFormToNamePlate(textBoxValue, index);
-        GameController.setPlayerAlias(textBoxValue, index);
+        PlayerController.getPlayer(index).setAlias(textBoxValue);
       }
     }
     function switchFormToNamePlate(textBoxValue, index) {
@@ -667,4 +671,3 @@ const Render = (() => {
   Render.eraseContentFromAllCells();
   //*/
 }
-
