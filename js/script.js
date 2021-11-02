@@ -485,8 +485,15 @@ const Render = (() => {
 
     const resetButton = () => {
       const button = _buildButton("Reset Game");
-      button.addEventListener("click", GameController.resetGame());
+      button.addEventListener("click", resetAll);
       return button;
+
+      function resetAll() {
+        GameBoard.reset();
+        PlayerController.reset();
+        GameBoardDisplay.reset();
+        PlayerBar.reset();
+      }
     };
 
     const okButton = () => {
@@ -661,39 +668,3 @@ const Render = (() => {
   //*/
 }
 
-// GameController Module handles logic for determining win and servers as go
-// between for Render and GameBoard Module
-const GameController = (() => {
-  const _NUM_OF_PLAYERS = 2;
-  let _players = [];
-  const _initPlayers = (() => {
-    for (let i = 0; i < _NUM_OF_PLAYERS; i++) {
-      const player = Player();
-      _players.push(player);
-    }
-  })();
-  const setPlayerAlias = (playerAlias, playerIndex) =>
-    _players[playerIndex].setAlias(playerAlias);
-
-  const getNumOfPlayers = () => _NUM_OF_PLAYERS;
-
-  // function allPlayerNamesSet
-
-  const resetGame = () => {
-    GameBoard.reset();
-    Render.GameBoardDisplay.reset();
-    Render.PlayerBar.reset();
-  };
-
-  const handleBoardCellClickEvent = (clickedRow, clickedColumn) => {};
-
-  return {
-    setPlayerAlias,
-    getNumOfPlayers,
-    handleBoardCellClickEvent,
-    resetGame,
-  };
-})();
-//GameController Tests
-{
-}
