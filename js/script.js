@@ -307,20 +307,27 @@ const PlayerController = (() => {
     _players[0].setIsActiveStatus(true);
   })();
 
+  // temp function until custom marks are implemented in playerbar
+  function _setMarks() {
+    _players[0].setMark("X");
+    _players[1].setMark("O");
+  }
+  _setMarks();
+
   const getNumOfPlayers = () => _NUM_OF_PLAYERS;
 
   const getPlayer = (playerIndex) => _players[playerIndex];
 
-  const getActivePlayer = () => {
-    _players.filter((player) => player.getIsActiveStatus());
-  };
+  const getActivePlayer = () =>
+    _players.filter((player) => player.getIsActiveStatus())[0];
 
   const areAllPlayerAliasesSet = () =>
-    _players.every((player) => player.getAlias !== "");
+    _players.every((player) => player.getAlias() !== "");
 
   const reset = () => {
     _players.forEach((player) => player.reset());
     _players[0].setIsActiveStatus(true);
+    _setMarks();
   };
 
   const getActivePlayerIndex = () => _players.indexOf(getActivePlayer());
@@ -347,6 +354,72 @@ const PlayerController = (() => {
     cycleActivePlayerToNextPlayer,
   };
 })();
+// PlayerController Tests
+{
+  /*
+  console.log("getNumOfPlayers Tests",  PlayerController.getNumOfPlayers()===2?"Passed":"Failed");
+  //*/
+  /*
+  console.log("getPlayer Tests");
+  PlayerController.getPlayer(0).setAlias("p1");
+  PlayerController.getPlayer(1).setAlias("p2");
+  console.log(
+    PlayerController.getPlayer(0).getAlias() === "p1" ? "Passed" : "Failed",
+    PlayerController.getPlayer(1).getAlias() === "p2" ? "Passed" : "Failed"
+  );
+  //*/
+  /*
+  console.log("getActivePlayer Tests");
+  PlayerController.getPlayer(0).setAlias("p1");
+  PlayerController.getPlayer(1).setAlias("p2");
+  console.log(PlayerController.getActivePlayer().getAlias()==="p1"?"Passed":"Failed");
+  //*/
+  /*
+  console.log("areAllPlayerAliasesSet Tests");
+  console.log(
+    PlayerController.areAllPlayerAliasesSet() === false ? "Passed" : "Failed"
+  );
+  PlayerController.getPlayer(0).setAlias("X");
+  PlayerController.getPlayer(1).setAlias("O");
+  console.log(
+    PlayerController.areAllPlayerAliasesSet() === true ? "Passed" : "Failed"
+  );
+  //*/
+  /*
+  console.log("reset Tests");
+  PlayerController.getPlayer(0).setAlias("player1");
+  PlayerController.getPlayer(1).setAlias("player2");
+PlayerController.reset();
+  console.log(
+  PlayerController.getPlayer(0).getAlias()=== "" ? "Passed" : "Failed",
+  PlayerController.getPlayer(1).getAlias()=== "" ? "Passed" : "Failed",
+  PlayerController.getPlayer(0).getMark()=== "X" ? "Passed" : "Failed",
+PlayerController.getActivePlayer()? "Passed" : "Failed"
+)
+  //*/
+  /*
+  console.log("getActivePlayerIndex Tests");
+  console.log(
+    PlayerController.getActivePlayerIndex()===0 ? "Passed" : "Failed"
+  )
+  PlayerController.getPlayer(0).setIsActiveStatus(false)
+  PlayerController.getPlayer(1).setIsActiveStatus(true)
+  console.log(
+    PlayerController.getActivePlayerIndex()===1 ? "Passed" : "Failed"
+  )
+  //*/
+  /*
+  console.log("cycleActivePlayerToNextPlayer Tests");
+  PlayerController.cycleActivePlayerToNextPlayer();
+  console.log(
+    PlayerController.getActivePlayerIndex() === 1 ? "Passed" : "Failed"
+  );
+  PlayerController.cycleActivePlayerToNextPlayer();
+  console.log(
+    PlayerController.getActivePlayerIndex() === 0 ? "Passed" : "Failed"
+  );
+  //*/
+}
 
 // Render module handles all DOM access and initialization
 const Render = (() => {
