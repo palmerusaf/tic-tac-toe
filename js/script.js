@@ -46,101 +46,6 @@ console.log(nc.getPlayersMark());
 console.log(nc.setPlayersMark("O"));
 //*/
 
-// Player factory that stores info about player objects
-const Player = () => {
-  let _alias = "";
-  let _mark = "";
-  let _isTurn = false;
-  let _isWinner = false;
-
-  const setAlias = (alias) =>
-    _alias ? console.log("Error: Player name already set.") : (_alias = alias);
-  const getAlias = () => _alias;
-
-  const setMark = (mark) =>
-    _mark ? console.log("Error: Player mark already set.") : (_mark = mark);
-  const getMark = () => _mark;
-
-  const setIsTurn = (bool) =>
-    bool === _isTurn
-      ? console.log(`Error: isPlayerTurn already set to ${bool}.`)
-      : (_isTurn = bool);
-  const getIsTurn = () => _isTurn;
-
-  const setIsWinner = (bool) =>
-    bool === _isWinner
-      ? console.log(`Error: isWinner already set to ${bool}.`)
-      : (_isWinner = bool);
-  const getIsWinner = () => _isWinner;
-
-  const reset = () => {
-    _alias = "";
-    _mark = "";
-    _isTurn = false;
-    _isWinner = false;
-  };
-
-  return {
-    setAlias,
-    getAlias,
-    setMark,
-    getMark,
-    getIsTurn,
-    setIsTurn,
-    setIsWinner,
-    getIsWinner,
-    reset,
-  };
-};
-// Player Tests
-{
-  /*
-  const myPlayer = Player();
-  console.log("set/getAlias Tests");
-  myPlayer.setAlias("Branden");
-  console.log(myPlayer.getAlias());
-  myPlayer.setAlias("Branden");
-  //*/
-  /*
-  const myPlayer = Player();
-  console.log("set/getMark Tests");
-  myPlayer.setMark("X");
-  console.log(myPlayer.getMark());
-  myPlayer.setMark("O");
-  //*/
-  /*
-  const myPlayer = Player();
-  console.log("set/getIsTurn Tests");
-  myPlayer.setIsTurn(true);
-  console.log(myPlayer.getIsTurn());
-  myPlayer.setIsTurn(true);
-  //*/
-  /*
-  const myPlayer = Player();
-  console.log("set/getIsWinner Tests");
-  myPlayer.setIsWinner(true);
-  console.log(myPlayer.getIsWinner());
-  myPlayer.setIsWinner(true);
-  //*/
-  /*
-  const myPlayer = Player();
-  console.log("reset Tests");
-  myPlayer.setAlias("Branden");
-  myPlayer.setIsWinner(true);
-  myPlayer.setIsTurn(true);
-  myPlayer.setMark("X");
-  console.log("winner = " + myPlayer.getIsWinner());
-  console.log("isTurn = " + myPlayer.getIsTurn());
-  console.log("mark = " + myPlayer.getMark());
-  console.log("player name = " + myPlayer.getAlias());
-  myPlayer.reset();
-  console.log("winner = " + myPlayer.getIsWinner());
-  console.log("isTurn = " + myPlayer.getIsTurn());
-  console.log("mark = " + myPlayer.getMark());
-  console.log("player name = " + myPlayer.getAlias());
-  //*/
-}
-
 // GameBoard module handles all data access and initialization
 const GameBoard = (() => {
   const _GRID_SIZE = 3;
@@ -391,6 +296,17 @@ const Player = () => {
   console.log("player name = " + myPlayer.getAlias());
   //*/
 }
+
+const PlayerController = (() => {
+  const _NUM_OF_PLAYERS = 2;
+  let _players = [];
+  const _initilizePlayers = (() => {
+    for (let index = 0; index < _NUM_OF_PLAYERS; index++) {
+      _players.push(Player());
+    }
+  })();
+  
+})();
 
 // Render module handles all DOM access and initialization
 const Render = (() => {
