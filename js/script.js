@@ -323,12 +323,15 @@ const PlayerController = (() => {
     _players[0].setIsActiveStatus(true);
   };
 
+  const getActivePlayerIndex = () => _players.indexOf(getActivePlayer());
+
   return {
     getNumOfPlayers,
     getPlayer,
     getActivePlayer,
     areAllPlayerAliasesSet,
     reset,
+    getActivePlayerIndex,
   };
 })();
 
