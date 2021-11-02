@@ -305,7 +305,10 @@ const PlayerController = (() => {
       _players.push(Player());
     }
   })();
-  
+
+  const getNumOfPlayers = () => _NUM_OF_PLAYERS;
+
+  return { getNumOfPlayers };
 })();
 
 // Render module handles all DOM access and initialization
@@ -434,7 +437,7 @@ const Render = (() => {
   })();
 
   const PlayerBar = (() => {
-    const _NUM_OF_PLAYERS = GameController.getNumOfPlayers();
+    const _NUM_OF_PLAYERS = PlayerController.getNumOfPlayers();
     function playerBarContainer() {
       const container = document.createElement("div");
       container.className = "flex player-bar";
