@@ -744,17 +744,49 @@ const Render = (() => {
 // GameController controls logic responsible for determining the winner
 const GameController = (() => {
   function _isMoveWinner(row, column) {
-    if(_checkContentForMatch)
-    return false;
+    return _isRowOrColumnWin(row, column) || _isDiaganolsWin(row, column);
+
+    function _isRowOrColumnWin(row, column) {
+      return _isRowAWin(row) || _isColumnAWin(column);
+
+      function _isRowAWin(row) {
+        return _isContentAMatch(GameBoard.GetNeighbors.getRowContent(row));
+      }
+      function _isColumnAWin(column) {
+        return _isContentAMatch(
+          GameBoard.GetNeighbors.getColumnContent(column)
+        );
+      }
+    }
+
+    function _isDiaganolsWin(row, column) {
+      if (
+        GameBoard.isCellInBackDiagonal(row, column) &&
+        GameBoard.isCellInForwardDiagonal(row, column)
+      )
+        return (
+          _isContentAMatch(
+            GameBoard.GetNeighbors.getForwardDiagonalContent()
+          ) || _isContentAMatch(GameBoard.GetNeighbors.getBackDiagonalContent())
+        );
+      if (GameBoard.isCellInBackDiagonal(row, column))
+        return _isContentAMatch(
+          GameBoard.GetNeighbors.getBackDiagonalContent()
+        );
+      if (GameBoard.isCellInForwardDiagonal(row, column))
+        return _isContentAMatch(
+          GameBoard.GetNeighbors.getForwardDiagonalContent()
+        );
+    }
   }
 
-function _checkContentForMatch(content){
-
-}
+  function _isContentAMatch(content) {
+    return content.every((value, index, array) => value === array[0]);
+  }
 
   const handleMove = (row, column) => {
     if (GameBoard.areAllCellsPlayed()) return Render.Windows.tieMessage();
-    if (_isMoveWinner(row, column)){
+    if (_isMoveWinner(row, column)) {
       PlayerController.getActivePlayer().setIsWinner(true);
       Render.Windows.winnerMessage();
     }
