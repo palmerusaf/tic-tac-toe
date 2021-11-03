@@ -359,6 +359,8 @@ const PlayerController = (() => {
     return winner.getAlias();
   };
 
+  const thereIsAWinner = () => _players.some((player) => player.getIsWinner());
+
   return {
     getNumOfPlayers,
     getPlayer,
@@ -368,6 +370,7 @@ const PlayerController = (() => {
     getActivePlayerIndex,
     cycleActivePlayerToNextPlayer,
     getNameOfWinner,
+    thereIsAWinner,
   };
 })();
 // PlayerController Tests
@@ -489,10 +492,12 @@ const Render = (() => {
           .reportValidity();
       if (GameBoard.getCell(row, column).getIsPlayed())
         return console.log("cell played");
+      if (PlayerController.thereIsAWinner()) return Windows.winnerMessage();
 
       const mark = PlayerController.getActivePlayer().getMark();
       displayContentToCell(row, column, mark);
       GameBoard.getCell(row, column).setContent(mark);
+      GameController.handleMove(row, column);
       _cycleActivePlayerAndHighlightNamePlate();
     }
 
@@ -737,6 +742,23 @@ const Render = (() => {
 }
 
 // GameController controls logic responsible for determining the winner
-const GameController=(()=>{
+const GameController = (() => {
+  function _isMoveWinner(row, column) {
+    if(_checkContentForMatch)
+    return false;
+  }
 
+function _checkContentForMatch(content){
+
+}
+
+  const handleMove = (row, column) => {
+    if (GameBoard.areAllCellsPlayed()) return Render.Windows.tieMessage();
+    if (_isMoveWinner(row, column)){
+      PlayerController.getActivePlayer().setIsWinner(true);
+      Render.Windows.winnerMessage();
+    }
+  };
+
+  return { handleMove };
 })();
