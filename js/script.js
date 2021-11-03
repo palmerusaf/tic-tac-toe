@@ -114,6 +114,7 @@ const GameBoard = (() => {
     _cells.forEach((cell) => cell.resetCell());
   };
 
+  const areAllCellsPlayed = () => _cells.every((cell) => cell.getIsPlayed());
   return {
     getGridSize,
     getCell,
@@ -121,6 +122,7 @@ const GameBoard = (() => {
     isCellInForwardDiagonal,
     GetNeighbors,
     reset,
+    areAllCellsPlayed,
   };
 })();
 // GameBoard Tests
@@ -199,6 +201,14 @@ const GameBoard = (() => {
   GameBoard.setCellContent(1, 1, "X");
   console.log(GameBoard.getCellContent(1, 1));
   console.log(GameBoard.getCellContent(1, 0));
+  //*/
+  /*
+  console.log("areAllCellsPlayed test");
+  console.log(GameBoard.areAllCellsPlayed() === false ? "Passed" : "Failed");
+  for (let row = 0; row < GameBoard.getGridSize(); row++)
+    for (let column = 0; column < GameBoard.getGridSize(); column++)
+      GameBoard.getCell(row, column).setContent("X");
+  console.log(GameBoard.areAllCellsPlayed() === true ? "Passed" : "Failed");
   //*/
 }
 
@@ -459,8 +469,9 @@ const Render = (() => {
     }
 
     function handleBoardCellClickEvent(row, column) {
-      if (PlayerController.areAllPlayerAliasesSet() === false) return;
-      if (GameBoard.getCell(row, column).getIsPlayed()) return;
+      if (PlayerController.areAllPlayerAliasesSet() === false)
+        return document.querySelector(".player-bar__entry-box").reportValidity();
+      if (GameBoard.getCell(row, column).getIsPlayed()) return console.log("cell played");
 
       const mark = PlayerController.getActivePlayer().getMark();
       displayContentToCell(row, column, mark);
