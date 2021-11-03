@@ -13,7 +13,7 @@
   outline: white solid 1px;
   width: 500px;
   height: 500px;
-  margin:2em;
+  margin: 2em;
   &__cell {
     outline: black solid 1px;
     justify-content: center;
@@ -27,7 +27,7 @@
 .button {
   padding: 2px;
   width: 90px;
-flex:0 0 auto;
+  flex: 0 0 auto;
 }
 
 .msg-window {
@@ -37,7 +37,7 @@ flex:0 0 auto;
   justify-self: center;
   align-self: center;
   z-index: 1;
-  background: rgba($color: white, $alpha: .7);
+  background: rgba($color: white, $alpha: 0.7);
   outline: black solid 1px;
   &__button-container {
     gap: 8px;
@@ -46,21 +46,24 @@ flex:0 0 auto;
   }
 }
 
-.player-bar{
+.player-bar {
   justify-content: space-around;
-  &__player-field{
+  &__player-field {
   }
-  &__player-form{
-gap: 8px;
+  &__player-form {
+    gap: 8px;
   }
-  &__entry-box{
-width:11em;
+  &__entry-box {
+    width: 11em;
   }
-  &__set-name-button{
-margin-right: 2em;
+  &__set-name-button {
+    margin-right: 2em;
   }
-  &__name-plate{
-margin:0 2em;
-font-family: sans-serif;
+  &__name-plate {
+    margin: 0 2em;
+    font-family: sans-serif;
+    &--active {
+      transform: scale(1.5);
+    }
   }
 }
