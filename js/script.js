@@ -459,7 +459,8 @@ const Render = (() => {
     }
 
     function handleBoardCellClickEvent(row, column) {
-      if (PlayerController.areAllPlayerAliasesSet() === false) return;
+      if (PlayerController.areAllPlayerAliasesSet() === false)
+        return alert("Set Player Names First");
       if (GameBoard.getCell(row, column).getIsPlayed()) return;
 
       const mark = PlayerController.getActivePlayer().getMark();
