@@ -354,6 +354,11 @@ const PlayerController = (() => {
     }
   };
 
+  const getNameOfWinner = () => {
+    const winner = _players.filter((player) => player.getIsWinner())[0];
+    return winner.getAlias();
+  };
+
   return {
     getNumOfPlayers,
     getPlayer,
@@ -362,6 +367,7 @@ const PlayerController = (() => {
     reset,
     getActivePlayerIndex,
     cycleActivePlayerToNextPlayer,
+    getNameOfWinner,
   };
 })();
 // PlayerController Tests
@@ -429,6 +435,14 @@ PlayerController.getActivePlayer()? "Passed" : "Failed"
     PlayerController.getActivePlayerIndex() === 0 ? "Passed" : "Failed"
   );
   //*/
+  /*
+  console.log("getNameOfWinner Test");
+  PlayerController.getPlayer(0).setAlias("player1");
+  PlayerController.getPlayer(0).setIsWinner(true);
+  console.log(
+    PlayerController.getNameOfWinner() === "player1" ? "Passed" : "Failed"
+  );
+  //*/
 }
 
 // Render module handles all DOM access and initialization
@@ -470,8 +484,11 @@ const Render = (() => {
 
     function handleBoardCellClickEvent(row, column) {
       if (PlayerController.areAllPlayerAliasesSet() === false)
-        return document.querySelector(".player-bar__entry-box").reportValidity();
-      if (GameBoard.getCell(row, column).getIsPlayed()) return console.log("cell played");
+        return document
+          .querySelector(".player-bar__entry-box")
+          .reportValidity();
+      if (GameBoard.getCell(row, column).getIsPlayed())
+        return console.log("cell played");
 
       const mark = PlayerController.getActivePlayer().getMark();
       displayContentToCell(row, column, mark);
@@ -561,11 +578,12 @@ const Render = (() => {
       }
     };
 
-    const winnerMessage = (winner) =>
+    const winnerMessage = () => {
+      const winnersName = PlayerController.getNameOfWinner();
       _body.appendChild(
-        _messageWindow(`Congratulations ${winner}, you have won!!!`)
+        _messageWindow(`Congratulations ${winnersName}, you have won!!!`)
       );
-
+    };
     const tieMessage = () =>
       _body.appendChild(
         _messageWindow("No more moves available. The game has ended in a tie.")
