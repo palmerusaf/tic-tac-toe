@@ -470,7 +470,7 @@ const Render = (() => {
 
     function handleBoardCellClickEvent(row, column) {
       if (PlayerController.areAllPlayerAliasesSet() === false)
-        return alert("Set Player Names First");
+        return document.querySelector(".player-bar__entry-box").reportValidity();
       if (GameBoard.getCell(row, column).getIsPlayed()) return console.log("cell played");
 
       const mark = PlayerController.getActivePlayer().getMark();
