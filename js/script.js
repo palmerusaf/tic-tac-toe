@@ -493,7 +493,12 @@ const Render = (() => {
       const mark = PlayerController.getActivePlayer().getMark();
       displayContentToCell(row, column, mark);
       GameBoard.getCell(row, column).setContent(mark);
+      _cycleActivePlayerAndHighlightNamePlate();
+    }
+
+    function _cycleActivePlayerAndHighlightNamePlate() {
       PlayerController.cycleActivePlayerToNextPlayer();
+      PlayerBar.highlightActiveNamePlate();
     }
 
     function _selectCell(rowIndex, columnIndex) {
@@ -651,8 +656,9 @@ const Render = (() => {
     }
     function switchFormToNamePlate(textBoxValue, index) {
       const namePlate = buildPlayerNamePlate(textBoxValue, index);
+      if (index == PlayerController.getActivePlayerIndex())
+        namePlate.className += " player-bar__name-plate--active";
       insertPlayerNamePlate(namePlate, index);
-
       deletePlayerForm(index);
     }
     function deletePlayerForm(index) {
@@ -672,6 +678,29 @@ const Render = (() => {
       const form = document.getElementById("player-form" + index);
       playerFieldContainer.insertBefore(namePlate, form);
     }
+
+    const highlightActiveNamePlate = () => {
+      function _removeAllHighlights() {
+        const namePlateList = [
+          ...document.querySelectorAll(".player-bar__name-plate"),
+        ];
+        namePlateList.forEach((namePlate) => {
+          namePlate.className = namePlate.className.replace(
+            " player-bar__name-plate--active",
+            ""
+          );
+        });
+      }
+      function _addHighlightToActiveNamePlate() {
+        const activeNamePlate = document.getElementById(
+          "player-name-plate" + PlayerController.getActivePlayerIndex()
+        );
+        activeNamePlate.className += " player-bar__name-plate--active";
+      }
+      _removeAllHighlights();
+      _addHighlightToActiveNamePlate();
+    };
+
     const reset = () => {
       const oldPlayerBarContainer = document.querySelector(".player-bar");
       oldPlayerBarContainer.remove();
@@ -679,7 +708,7 @@ const Render = (() => {
     };
 
     _body.appendChild(playerBarContainer());
-    return { reset };
+    return { reset, highlightActiveNamePlate };
   })();
 
   return {

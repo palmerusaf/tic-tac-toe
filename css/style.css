@@ -50,5 +50,7 @@
   .player-bar__name-plate {
     margin: 0 2em;
     font-family: sans-serif; }
+    .player-bar__name-plate--active {
+      transform: scale(1.5); }
 
 /*# sourceMappingURL=style.css.map */
