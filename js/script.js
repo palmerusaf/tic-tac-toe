@@ -443,7 +443,7 @@ const Render = (() => {
   const _body = document.querySelector("body");
 
   // List of possible player marks
-  const MARK_ARRAY = [
+  const _MARK_ARRAY = [
     "X",
     "O",
     "😂",
@@ -699,7 +699,7 @@ const Render = (() => {
       const selector = document.createElement("select");
       const placeHolder = buildPlaceHolderForMarkSelector();
       selector.appendChild(placeHolder);
-      MARK_ARRAY.forEach((mark) =>
+      _MARK_ARRAY.forEach((mark) =>
         selector.appendChild(buildOptionFromMark(mark))
       );
       selector.required = true;
@@ -875,11 +875,11 @@ const GameController = (() => {
   }
 
   const handleMove = (row, column) => {
-    if (GameBoard.areAllCellsPlayed()) return Render.Windows.tieMessage();
     if (_isMoveWinner(row, column)) {
       PlayerController.getActivePlayer().setIsWinner(true);
       Render.Windows.winnerMessage();
     }
+    if (GameBoard.areAllCellsPlayed()) return Render.Windows.tieMessage();
   };
 
   return { handleMove };
