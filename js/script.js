@@ -12,8 +12,6 @@ const BoardCell = function (rowIndex, columnIndex) {
   const getIsPlayed = () => _isPlayed;
   const setContent = function (mark) {
     if (_isPlayed) return console.log("Cell already played.");
-    if (mark !== "X" && mark !== "O")
-      return console.log("Error: Invalid mark.");
     _content = mark;
     _isPlayed = true;
   };
@@ -317,13 +315,6 @@ const PlayerController = (() => {
     _players[0].setIsActiveStatus(true);
   })();
 
-  // temp function until custom marks are implemented in playerbar
-  function _setMarks() {
-    _players[0].setMark("X");
-    _players[1].setMark("O");
-  }
-  _setMarks();
-
   const getNumOfPlayers = () => _NUM_OF_PLAYERS;
 
   const getPlayer = (playerIndex) => _players[playerIndex];
@@ -337,7 +328,6 @@ const PlayerController = (() => {
   const reset = () => {
     _players.forEach((player) => player.reset());
     _players[0].setIsActiveStatus(true);
-    _setMarks();
   };
 
   const getActivePlayerIndex = () => _players.indexOf(getActivePlayer());
@@ -451,6 +441,62 @@ PlayerController.getActivePlayer()? "Passed" : "Failed"
 // Render module handles all DOM access and initialization
 const Render = (() => {
   const _body = document.querySelector("body");
+
+  // List of possible player marks
+  const _MARK_ARRAY = [
+    "X",
+    "O",
+    "😂",
+    "❤️",
+    "😍",
+    "🤣",
+    "😊",
+    "🙏",
+    "💕",
+    "😭",
+    "😘",
+    "👍",
+    "😅",
+    "👏",
+    "😁",
+    "🔥",
+    "💔",
+    "💖",
+    "😢",
+    "🤔",
+    "😆",
+    "🙄",
+    "💪",
+    "😉",
+    "☺️",
+    "👌",
+    "🤗",
+    "😔",
+    "😎",
+    "😇",
+    "🌹",
+    "🤦",
+    "🎉",
+    "💞",
+    "✌️",
+    "✨",
+    "🤷",
+    "😱",
+    "😌",
+    "🌸",
+    "🙌",
+    "😋",
+    "😏",
+    "🙂",
+    "🤩",
+    "😄",
+    "😀",
+    "😃",
+    "💯",
+    "🙈",
+    "👇",
+    "🎶",
+  ];
 
   const GameBoardDisplay = (() => {
     const _board = document.createElement("div");
@@ -636,11 +682,12 @@ const Render = (() => {
       playerForm.id = "player-form" + index;
       playerForm.action = "#";
       playerForm.onsubmit = "return false";
-      playerForm.appendChild(buildPlayerEntryBox(index));
-      playerForm.appendChild(buildSetPlayerAliasButton(index));
+      playerForm.appendChild(buildPlayerNameEntryBox(index));
+      playerForm.appendChild(buildPlayerMarkSelector(index));
+      playerForm.appendChild(buildSetPlayerButton(index));
       return playerForm;
     }
-    function buildPlayerEntryBox(index) {
+    function buildPlayerNameEntryBox(index) {
       const entryBox = document.createElement("input");
       entryBox.className = "player-bar__entry-box";
       entryBox.type = "text";
@@ -648,11 +695,36 @@ const Render = (() => {
       entryBox.required = true;
       return entryBox;
     }
-    function buildSetPlayerAliasButton(index) {
+    function buildPlayerMarkSelector(index) {
+      const selector = document.createElement("select");
+      const placeHolder = buildPlaceHolderForMarkSelector();
+      selector.appendChild(placeHolder);
+      _MARK_ARRAY.forEach((mark) =>
+        selector.appendChild(buildOptionFromMark(mark))
+      );
+      selector.required = true;
+      return selector;
+
+      function buildPlaceHolderForMarkSelector() {
+        const placeHolder = document.createElement("option");
+        placeHolder.value = "";
+        placeHolder.disabled = true;
+        placeHolder.selected = true;
+        placeHolder.textContent = "mark";
+        return placeHolder;
+      }
+      function buildOptionFromMark(mark) {
+        const option = document.createElement("option");
+        option.value = mark;
+        option.textContent = mark;
+        return option;
+      }
+    }
+    function buildSetPlayerButton(index) {
       const button = document.createElement("input");
       button.className = "button player-bar__set-name-button";
       button.type = "submit";
-      button.value = "Set Name";
+      button.value = "Set Player";
       button.dataset.index = index;
       button.addEventListener("click", handleButtonEvent);
       return button;
@@ -660,10 +732,12 @@ const Render = (() => {
     function handleButtonEvent(event) {
       const index = event.target.dataset.index;
       const form = document.getElementById("player-form" + index);
-      const textBoxValue = form[0].value;
-      if (textBoxValue) {
-        switchFormToNamePlate(textBoxValue, index);
-        PlayerController.getPlayer(index).setAlias(textBoxValue);
+      const playerNameTextBoxValue = form[0].value;
+      const mark = form[1].value;
+      if (form[0].checkValidity() && form[1].checkValidity()) {
+        PlayerController.getPlayer(index).setMark(mark);
+        PlayerController.getPlayer(index).setAlias(playerNameTextBoxValue);
+        switchFormToNamePlate(playerNameTextBoxValue, index);
       }
     }
     function switchFormToNamePlate(textBoxValue, index) {
