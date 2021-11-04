@@ -895,6 +895,13 @@ const Menu = (() => {
     container.appendChild(_buildCancelButton());
     return container;
   };
+  function _buildContainer() {
+    const container = document.createElement("form");
+    container.className = "flex-col menu-form";
+    container.action = "#";
+    container.onsubmit = "return false";
+    return container;
+  }
 
   return { buildForm };
 })();
