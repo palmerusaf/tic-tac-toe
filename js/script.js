@@ -903,5 +903,14 @@ const Menu = (() => {
     return container;
   }
 
+  function _buildGridSizeSelector() {
+    const selectorValues = [3, 5, 7, 9];
+    return _buildSelectorElement(
+      "Grid Size",
+      "grid-size",
+      "size",
+      selectorValues
+    );
+  }
   return { buildForm };
 })();
