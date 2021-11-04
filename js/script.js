@@ -912,5 +912,14 @@ const Menu = (() => {
       selectorValues
     );
   }
+  function _buildNumOfPlayersSelector() {
+    const selectorValues = [2, 3, 4];
+    return _buildSelectorElement(
+      "Number of Players",
+      "player-num",
+      "number",
+      selectorValues
+    );
+  }
   return { buildForm };
 })();
