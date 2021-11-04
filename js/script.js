@@ -671,9 +671,10 @@ const Render = (() => {
     }
     function buildPlayerNamePlate(textBoxValue, index) {
       const namePlate = document.createElement("div");
+      const playerMark = PlayerController.getPlayer(index).getMark();
       namePlate.className = "player-bar__name-plate";
       namePlate.id = "player-name-plate" + index;
-      namePlate.textContent = textBoxValue;
+      namePlate.textContent = `${textBoxValue} ${playerMark}`;
       return namePlate;
     }
     function insertPlayerNamePlate(namePlate, index) {
