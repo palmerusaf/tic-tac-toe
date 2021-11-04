@@ -68,8 +68,6 @@ const BoardCell = function (rowIndex, columnIndex) {
   const getIsPlayed = () => _isPlayed;
   const setContent = function (mark) {
     if (_isPlayed) return console.log("Cell already played.");
-    if (mark !== "X" && mark !== "O")
-      return console.log("Error: Invalid mark.");
     _content = mark;
     _isPlayed = true;
   };
@@ -373,13 +371,6 @@ const PlayerController = (() => {
     _players[0].setIsActiveStatus(true);
   })();
 
-  // temp function until custom marks are implemented in playerbar
-  function _setMarks() {
-    _players[0].setMark("X");
-    _players[1].setMark("O");
-  }
-  _setMarks();
-
   const getNumOfPlayers = () => _NUM_OF_PLAYERS;
 
   const getPlayer = (playerIndex) => _players[playerIndex];
@@ -393,7 +384,6 @@ const PlayerController = (() => {
   const reset = () => {
     _players.forEach((player) => player.reset());
     _players[0].setIsActiveStatus(true);
-    _setMarks();
   };
 
   const getActivePlayerIndex = () => _players.indexOf(getActivePlayer());
@@ -745,9 +735,9 @@ const Render = (() => {
       const playerNameTextBoxValue = form[0].value;
       const mark = form[1].value;
       if (form[0].checkValidity() && form[1].checkValidity()) {
-        switchFormToNamePlate(playerNameTextBoxValue, index);
-        PlayerController.getPlayer(index).setAlias(playerNameTextBoxValue);
         PlayerController.getPlayer(index).setMark(mark);
+        PlayerController.getPlayer(index).setAlias(playerNameTextBoxValue);
+        switchFormToNamePlate(playerNameTextBoxValue, index);
       }
     }
     function switchFormToNamePlate(textBoxValue, index) {
