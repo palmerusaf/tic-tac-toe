@@ -887,7 +887,14 @@ const GameController = (() => {
 
 // Menu module in charge of building form and logic for menu button
 const Menu = (() => {
-  const buildForm = () => {};
+  const buildForm = () => {
+    const container = _buildContainer();
+    container.appendChild(_buildGridSizeSelector());
+    container.appendChild(_buildNumOfPlayersSelector());
+    container.appendChild(_buildSubmitButton());
+    container.appendChild(_buildCancelButton());
+    return container;
+  };
 
   return { buildForm };
 })();
