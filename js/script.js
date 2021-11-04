@@ -921,5 +921,22 @@ const Menu = (() => {
       selectorValues
     );
   }
+  function _buildSelectorElement(
+    labelContent,
+    id,
+    placeHolderLabel,
+    arrayOfValues
+  ) {
+    const container = document.createElement("span");
+    const label = buildLabel(labelContent, id);
+    const selector = buildSelector(id, arrayOfValues);
+    const placeHolder = buildPlaceHolder(placeHolderLabel);
+    container.className = "menu-form__element";
+    selector.prepend(placeHolder);
+    container.appendChild(label);
+    container.appendChild(selector);
+    return container;
+
+  }
   return { buildForm };
 })();
