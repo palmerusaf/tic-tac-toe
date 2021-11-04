@@ -354,9 +354,9 @@ const PlayerController = (() => {
     }
   };
 
-  const getNameOfWinner = () => {
+  const getWinner = () => {
     const winner = _players.filter((player) => player.getIsWinner())[0];
-    return winner.getAlias();
+    return winner;
   };
 
   const thereIsAWinner = () => _players.some((player) => player.getIsWinner());
@@ -369,7 +369,7 @@ const PlayerController = (() => {
     reset,
     getActivePlayerIndex,
     cycleActivePlayerToNextPlayer,
-    getNameOfWinner,
+    getWinner,
     thereIsAWinner,
   };
 })();
@@ -589,10 +589,17 @@ const Render = (() => {
     };
 
     const winnerMessage = () => {
-      const winnersName = PlayerController.getNameOfWinner();
-      _body.appendChild(
-        _messageWindow(`Congratulations ${winnersName}, you have won!!!`)
+      const winnersName = PlayerController.getWinner().getAlias();
+      const markField = document.createElement("div");
+      const msgWindow = _messageWindow(
+        `Congratulations ${winnersName}, you have won!!!`
       );
+      markField.className = "msg-window__mark-field";
+      markField.textContent = PlayerController.getWinner().getMark();
+      markField.textContent = PlayerController.getWinner().getMark();
+      msgWindow.prepend(markField);
+
+      _body.appendChild(msgWindow);
     };
     const tieMessage = () =>
       _body.appendChild(
@@ -671,9 +678,10 @@ const Render = (() => {
     }
     function buildPlayerNamePlate(textBoxValue, index) {
       const namePlate = document.createElement("div");
+      const playerMark = PlayerController.getPlayer(index).getMark();
       namePlate.className = "player-bar__name-plate";
       namePlate.id = "player-name-plate" + index;
-      namePlate.textContent = textBoxValue;
+      namePlate.textContent = `${textBoxValue} ${playerMark}`;
       return namePlate;
     }
     function insertPlayerNamePlate(namePlate, index) {
@@ -738,6 +746,14 @@ const Render = (() => {
   Render.displayContentToCell(0, 1, "X");
   Render.displayContentToCell(0, 2, "O");
   Render.eraseContentFromAllCells();
+  //*/
+  /*
+  console.log("winnerMessage Test");
+  const winner = PlayerController.getPlayer(0);
+  winner.setAlias("player one");
+  winner.setIsWinner(true);
+  winner.setMark()
+  Render.Windows.winnerMessage();
   //*/
 }
 
