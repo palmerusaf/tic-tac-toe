@@ -884,3 +884,10 @@ const GameController = (() => {
 
   return { handleMove };
 })();
+
+// Menu module in charge of building form and logic for menu button
+const Menu = (() => {
+  const buildForm = () => {};
+
+  return { buildForm };
+})();
