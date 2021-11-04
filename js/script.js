@@ -875,11 +875,11 @@ const GameController = (() => {
   }
 
   const handleMove = (row, column) => {
-    if (GameBoard.areAllCellsPlayed()) return Render.Windows.tieMessage();
     if (_isMoveWinner(row, column)) {
       PlayerController.getActivePlayer().setIsWinner(true);
       Render.Windows.winnerMessage();
     }
+    if (GameBoard.areAllCellsPlayed()) return Render.Windows.tieMessage();
   };
 
   return { handleMove };
