@@ -692,11 +692,12 @@ const Render = (() => {
       playerForm.id = "player-form" + index;
       playerForm.action = "#";
       playerForm.onsubmit = "return false";
-      playerForm.appendChild(buildPlayerEntryBox(index));
-      playerForm.appendChild(buildSetPlayerAliasButton(index));
+      playerForm.appendChild(buildPlayerNameEntryBox(index));
+      playerForm.appendChild(buildPlayerMarkSelector(index));
+      playerForm.appendChild(buildSetPlayerButton(index));
       return playerForm;
     }
-    function buildPlayerEntryBox(index) {
+    function buildPlayerNameEntryBox(index) {
       const entryBox = document.createElement("input");
       entryBox.className = "player-bar__entry-box";
       entryBox.type = "text";
@@ -704,11 +705,36 @@ const Render = (() => {
       entryBox.required = true;
       return entryBox;
     }
-    function buildSetPlayerAliasButton(index) {
+    function buildPlayerMarkSelector(index) {
+      const selector = document.createElement("select");
+      const placeHolder = buildPlaceHolderForMarkSelector();
+      selector.appendChild(placeHolder);
+      MARK_ARRAY.forEach((mark) =>
+        selector.appendChild(buildOptionFromMark(mark))
+      );
+      selector.required = true;
+      return selector;
+
+      function buildPlaceHolderForMarkSelector() {
+        const placeHolder = document.createElement("option");
+        placeHolder.value = "";
+        placeHolder.disabled = true;
+        placeHolder.selected = true;
+        placeHolder.textContent = "mark";
+        return placeHolder;
+      }
+      function buildOptionFromMark(mark){
+        const option=document.createElement("option");
+        option.value=mark
+        option.textContent=mark
+        return option;
+      }
+    }
+    function buildSetPlayerButton(index) {
       const button = document.createElement("input");
       button.className = "button player-bar__set-name-button";
       button.type = "submit";
-      button.value = "Set Name";
+      button.value = "Set Player";
       button.dataset.index = index;
       button.addEventListener("click", handleButtonEvent);
       return button;
@@ -716,10 +742,12 @@ const Render = (() => {
     function handleButtonEvent(event) {
       const index = event.target.dataset.index;
       const form = document.getElementById("player-form" + index);
-      const textBoxValue = form[0].value;
-      if (textBoxValue) {
-        switchFormToNamePlate(textBoxValue, index);
-        PlayerController.getPlayer(index).setAlias(textBoxValue);
+      const playerNameTextBoxValue = form[0].value;
+      const mark = form[1].value;
+      if (form[0].checkValidity() && form[1].checkValidity()) {
+        switchFormToNamePlate(playerNameTextBoxValue, index);
+        PlayerController.getPlayer(index).setAlias(playerNameTextBoxValue);
+        PlayerController.getPlayer(index).setMark(mark);
       }
     }
     function switchFormToNamePlate(textBoxValue, index) {
