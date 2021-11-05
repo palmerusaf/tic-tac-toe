@@ -644,54 +644,85 @@ const Render = (() => {
     };
     const displayMenu = () => {
       const window = _buildWindow();
+      window.className += " menu";
       window.append(buildForm());
+
       _body.append(window);
+
       function buildForm() {
         const formContainer = buildFormContainer();
-        formContainer.appendChild(_buildGridSizeSelector());
-        formContainer.appendChild(_buildNumOfPlayersSelector());
+        attachSelectors(formContainer);
         formContainer.appendChild(buildMenuButtonField());
         return formContainer;
+
         function buildFormContainer() {
           const container = document.createElement("form");
-          container.className = "flex-col menu-form";
+          container.className = "flex-col menu__form";
           container.action = "#";
           container.onsubmit = "return false";
           return container;
         }
-        function _buildGridSizeSelector() {
-          const selectorValues = [3, 5, 7, 9];
-          return _buildSelectorElement(
-            "Grid Size",
-            "grid-size",
-            "size",
-            selectorValues
-          );
-        }
-        function _buildNumOfPlayersSelector() {
-          const selectorValues = [2, 3, 4];
-          return _buildSelectorElement(
-            "Number of Players",
-            "player-num",
-            "number",
-            selectorValues
-          );
-        }
-        function _buildSelectorElement(
-          labelContent,
-          id,
-          placeHolderLabel,
-          arrayOfValues
-        ) {
-          const container = document.createElement("span");
-          const label = buildLabel(labelContent, id);
-          const selector = buildSelector(id, arrayOfValues);
-          const placeHolder = buildPlaceHolder(placeHolderLabel);
-          container.className = "menu-form__element";
-          selector.prepend(placeHolder);
-          container.appendChild(label);
-          container.appendChild(selector);
-          return container;
+        function attachSelectors(formContainer) {
+          formContainer.appendChild(buildGridSizeSelector());
+          formContainer.appendChild(buildNumOfPlayersSelector());
+
+          function buildGridSizeSelector() {
+            const id = "grid-size";
+            const options = [3, 5, 7, 9];
+            const labelContent = "Grid Size:";
+            return buildSelectorContainer(id, options, labelContent);
+          }
+          function buildNumOfPlayersSelector() {
+            const id = "num-players";
+            const options = [2, 3, 4];
+            const labelContent = "Number of Players:";
+            return buildSelectorContainer(id, options, labelContent);
+          }
+          function buildSelectorContainer(id, options, labelContent) {
+            const container = buildFormElementContainer();
+            const selector = buildSelector(id);
+            attachOptionsToSelector(options, selector);
+            container.appendChild(buildLabel(id, labelContent));
+            container.appendChild(selector);
+            return container;
+            function buildLabel(id, labelContent) {
+              const label = document.createElement("label");
+              label.htmlFor = id;
+              label.textContent = labelContent;
+              return label;
+            }
+            function buildFormElementContainer() {
+              const container = document.createElement("span");
+              container.className = "menu__form-element";
+              return container;
+            }
+            function buildSelector(id) {
+              const selector = document.createElement("select");
+              selector.name = id;
+              selector.id = id;
+              selector.appendChild(buildPlaceHolder());
+              return selector;
+              function buildPlaceHolder() {
+                const placeHolder = document.createElement("option");
+                placeHolder.value = "";
+                placeHolder.disabled = true;
+                placeHolder.selected = true;
+                return placeHolder;
+              }
+            }
+            function attachOptionsToSelector(optionValues, selector) {
+              optionValues.forEach((value) =>
+                selector.appendChild(buildOption(value))
+              );
+
+              function buildOption(value) {
+                const option = document.createElement("option");
+                option.value = value;
+                option.textContent = value;
+                return option;
+              }
+            }
+          }
         }
       }
     };
