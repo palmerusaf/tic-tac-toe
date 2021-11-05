@@ -558,15 +558,8 @@ const Render = (() => {
 
     const resetButton = () => {
       const button = _buildButton("Reset Game");
-      button.addEventListener("click", resetAll);
+      button.addEventListener("click", () => GameController.resetAll());
       return button;
-
-      function resetAll() {
-        GameBoard.reset();
-        PlayerController.reset();
-        GameBoardDisplay.reset();
-        PlayerBar.reset();
-      }
     };
 
     const okButton = () => {
@@ -892,7 +885,13 @@ const GameController = (() => {
     }
   };
 
-  return { handleBoardCellClickEvent };
+  const resetAll = function () {
+    GameBoard.reset();
+    PlayerController.reset();
+    Render.GameBoardDisplay.reset();
+    Render.PlayerBar.reset();
+  };
+  return { handleBoardCellClickEvent, resetAll };
 })();
 
 // Menu module in charge of building form and logic for menu button
