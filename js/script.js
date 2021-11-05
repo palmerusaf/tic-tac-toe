@@ -813,70 +813,81 @@ const Render = (() => {
 // GameController handles on click functions and interfaces with other controllers
 const GameController = (() => {
   const handleBoardCellClickEvent = function (row, column) {
-    if (PlayerController.areAllPlayerAliasesSet() === false)
-      return document.querySelector(".player-bar__entry-box").reportValidity();
-    if (GameBoard.getCell(row, column).getIsPlayed())
-      return console.log("cell played");
-    if (PlayerController.thereIsAWinner()) return Windows.winnerMessage();
+    isMoveInvalid(row, column)
+      ? handleInvalidMoves()
+      : handleValidMoves(row, column);
 
-    const mark = PlayerController.getActivePlayer().getMark();
-    Render.GameBoardDisplay.displayContentToCell(row, column, mark);
-    GameBoard.getCell(row, column).setContent(mark);
-    _handleValidMoves(row, column);
-    _cycleActivePlayerAndHighlightNamePlate();
-
-    function _cycleActivePlayerAndHighlightNamePlate() {
-      PlayerController.cycleActivePlayerToNextPlayer();
-      Render.PlayerBar.highlightActiveNamePlate();
+    function isMoveInvalid(row, column) {
+      return (
+        PlayerController.areAllPlayerAliasesSet() === false ||
+        GameBoard.getCell(row, column).getIsPlayed() ||
+        PlayerController.thereIsAWinner() ||
+        GameBoard.areAllCellsPlayed()
+      );
     }
-
-    function _handleValidMoves(row, column) {
-      if (_isMoveWinner(row, column)) {
-        PlayerController.getActivePlayer().setIsWinner(true);
-        Render.Windows.winnerMessage();
-      }
+    function handleInvalidMoves() {
+      if (PlayerController.areAllPlayerAliasesSet() === false)
+        return document
+          .querySelector(".player-bar__entry-box")
+          .reportValidity();
+      if (PlayerController.thereIsAWinner()) return Windows.winnerMessage();
       if (GameBoard.areAllCellsPlayed()) return Render.Windows.tieMessage();
-
-      function _isMoveWinner(row, column) {
-        return _isRowOrColumnWin(row, column) || _isDiaganolsWin(row, column);
-
-        function _isRowOrColumnWin(row, column) {
-          return _isRowAWin(row) || _isColumnAWin(column);
-
-          function _isRowAWin(row) {
-            return _isContentAMatch(GameBoard.GetNeighbors.getRowContent(row));
-          }
-          function _isColumnAWin(column) {
-            return _isContentAMatch(
-              GameBoard.GetNeighbors.getColumnContent(column)
-            );
-          }
-        }
-
-        function _isDiaganolsWin(row, column) {
-          if (
-            GameBoard.isCellInBackDiagonal(row, column) &&
-            GameBoard.isCellInForwardDiagonal(row, column)
-          )
-            return (
-              _isContentAMatch(
-                GameBoard.GetNeighbors.getForwardDiagonalContent()
-              ) ||
-              _isContentAMatch(GameBoard.GetNeighbors.getBackDiagonalContent())
-            );
-          if (GameBoard.isCellInBackDiagonal(row, column))
-            return _isContentAMatch(
-              GameBoard.GetNeighbors.getBackDiagonalContent()
-            );
-          if (GameBoard.isCellInForwardDiagonal(row, column))
-            return _isContentAMatch(
-              GameBoard.GetNeighbors.getForwardDiagonalContent()
-            );
-        }
+    }
+    function handleValidMoves(row, column) {
+      recordPlayerMark(row, column);
+      handleWinningMoves(row, column);
+      cycleActivePlayerAndHighlightNamePlate();
+      function recordPlayerMark(row, column) {
+        const mark = PlayerController.getActivePlayer().getMark();
+        Render.GameBoardDisplay.displayContentToCell(row, column, mark);
+        GameBoard.getCell(row, column).setContent(mark);
       }
-
-      function _isContentAMatch(content) {
-        return content.every((value, index, array) => value === array[0]);
+      function cycleActivePlayerAndHighlightNamePlate() {
+        PlayerController.cycleActivePlayerToNextPlayer();
+        Render.PlayerBar.highlightActiveNamePlate();
+      }
+      function handleWinningMoves(row, column) {
+        if (isMoveWinner(row, column)) {
+          PlayerController.getActivePlayer().setIsWinner(true);
+          Render.Windows.winnerMessage();
+        }
+        function isMoveWinner(row, column) {
+          return isRowOrColumnWin(row, column) || isDiaganolsWin(row, column);
+          function isRowOrColumnWin(row, column) {
+            return isRowAWin(row) || isColumnAWin(column);
+            function isRowAWin(row) {
+              return isContentAMatch(GameBoard.GetNeighbors.getRowContent(row));
+            }
+            function isColumnAWin(column) {
+              return isContentAMatch(
+                GameBoard.GetNeighbors.getColumnContent(column)
+              );
+            }
+          }
+          function isDiaganolsWin(row, column) {
+            if (
+              GameBoard.isCellInBackDiagonal(row, column) &&
+              GameBoard.isCellInForwardDiagonal(row, column)
+            )
+              return (
+                isContentAMatch(
+                  GameBoard.GetNeighbors.getForwardDiagonalContent()
+                ) ||
+                isContentAMatch(GameBoard.GetNeighbors.getBackDiagonalContent())
+              );
+            if (GameBoard.isCellInBackDiagonal(row, column))
+              return isContentAMatch(
+                GameBoard.GetNeighbors.getBackDiagonalContent()
+              );
+            if (GameBoard.isCellInForwardDiagonal(row, column))
+              return isContentAMatch(
+                GameBoard.GetNeighbors.getForwardDiagonalContent()
+              );
+          }
+          function isContentAMatch(content) {
+            return content.every((value, index, array) => value === array[0]);
+          }
+        }
       }
     }
   };
