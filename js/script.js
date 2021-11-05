@@ -561,11 +561,11 @@ const Render = (() => {
       button.addEventListener("click", () => GameController.resetAll());
       return button;
     };
-    const buildCancelButton=()=>{
+    const buildCancelButton = () => {
       const button = _buildButton("Cancel");
       button.addEventListener("click", () => Windows.closeWindow());
       return button;
-    }
+    };
     const buildOkButton = () => {
       const button = _buildButton("OK");
       button.addEventListener("click", () => Windows.closeWindow());
@@ -576,7 +576,14 @@ const Render = (() => {
       button.addEventListener("click", () => Windows.displayMenu());
       return button;
     };
-    return { buildResetButton, buildOkButton, menuButton };
+    const buildSubmitButton = () => {};
+    return {
+      buildResetButton,
+      buildOkButton,
+      menuButton,
+      buildCancelButton,
+      buildSubmitButton,
+    };
   })();
 
   const Windows = (() => {
@@ -586,7 +593,7 @@ const Render = (() => {
       return window;
     };
     function buildResetOkButtonField() {
-      const buttonField = buildButtonField()
+      const buttonField = buildButtonField();
       _attachButtonsToButtonField(buttonField);
       return buttonField;
       function _attachButtonsToButtonField(buttonField) {
@@ -596,10 +603,19 @@ const Render = (() => {
         buttonField.appendChild(_Buttons.buildOkButton());
       }
     }
-    function buildButtonField(){
+    function buildButtonField() {
       const buttonField = document.createElement("span");
       buttonField.className = "flex window__button-container";
       return buttonField;
+    }
+    function buildMenuButtonField() {
+      const buttonField = buildButtonField();
+      _attachButtonsToButtonField(buttonField);
+      return buttonField;
+      function _attachButtonsToButtonField(buttonField) {
+        buttonField.appendChild(_Buttons.buildCancelButton());
+        buttonField.appendChild(_Buttons.buildSubmitButton());
+      }
     }
     const winnerMessage = () => {
       const winnersName = PlayerController.getWinner().getAlias();
@@ -627,15 +643,14 @@ const Render = (() => {
       window.remove();
     };
     const displayMenu = () => {
-      const window=_buildWindow();
+      const window = _buildWindow();
       window.append(buildForm());
       _body.append(window);
-      function buildForm(){
+      function buildForm() {
         const formContainer = buildFormContainer();
         formContainer.appendChild(_buildGridSizeSelector());
         formContainer.appendChild(_buildNumOfPlayersSelector());
-        formContainer.appendChild(_buildSubmitButton());
-        formContainer.appendChild(_buildCancelButton());
+        formContainer.appendChild(buildMenuButtonField());
         return formContainer;
         function buildFormContainer() {
           const container = document.createElement("form");
@@ -678,11 +693,10 @@ const Render = (() => {
           container.appendChild(selector);
           return container;
         }
-      };
+      }
     };
-    return { winnerMessage, tieMessage, displayMenu, closeWindow};
+    return { winnerMessage, tieMessage, displayMenu, closeWindow };
   })();
-
 
   const PlayerBar = (() => {
     const _NUM_OF_PLAYERS = PlayerController.getNumOfPlayers();
