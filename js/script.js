@@ -566,8 +566,12 @@ const Render = (() => {
       const button = _buildButton("OK");
       return button;
     };
-
-    return { resetButton, okButton };
+    const menuButton = () => {
+      const button = _buildButton("Menu");
+      button.addEventListener("click", () => Windows.displayMenu());
+      return button;
+    };
+    return { resetButton, okButton,menuButton };
   })();
 
   const Windows = (() => {
@@ -624,7 +628,7 @@ const Render = (() => {
         _messageWindow("No more moves available. The game has ended in a tie.")
       );
 
-    return { winnerMessage, tieMessage };
+    return { winnerMessage, tieMessage, };
   })();
 
   const _MenuForm = (() => {
@@ -643,7 +647,7 @@ const Render = (() => {
       container.onsubmit = "return false";
       return container;
     }
-  
+
     function _buildGridSizeSelector() {
       const selectorValues = [3, 5, 7, 9];
       return _buildSelectorElement(
@@ -680,13 +684,20 @@ const Render = (() => {
     }
     return { buildForm };
   })();
-  
+
   const PlayerBar = (() => {
     const _NUM_OF_PLAYERS = PlayerController.getNumOfPlayers();
     function playerBarContainer() {
       const container = document.createElement("div");
       container.className = "flex player-bar";
       container.appendChild(playerFieldContainer());
+      container.appendChild(buttonField());
+      return container;
+    }
+    function buttonField(){
+      const container = document.createElement("span")
+      container.className="flex player-bar__button-field player-bar__player-form"
+      container.appendChild(_Buttons.menuButton());
       container.appendChild(_Buttons.resetButton());
       return container;
     }
