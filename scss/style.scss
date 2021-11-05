@@ -71,3 +71,18 @@
     }
   }
 }
+
+.menu{
+  &__title{
+    text-align: center;
+    text-decoration: underline;
+    font-size: 24px;
+    margin-top: -2em;
+    padding-bottom: .5em;
+  }
+  &__form{
+    gap: 2px;
+    text-align: left;
+    text-decoration: 0;
+  }
+}

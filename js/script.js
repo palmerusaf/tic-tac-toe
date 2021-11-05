@@ -587,8 +587,9 @@ const Render = (() => {
   })();
 
   const Windows = (() => {
-    const _buildWindow = () => {
+    const _buildWindow = (message) => {
       const window = document.createElement("div");
+      window.textContent = message;
       window.className = "flex-col window";
       return window;
     };
@@ -619,8 +620,9 @@ const Render = (() => {
     }
     const winnerMessage = () => {
       const winnersName = PlayerController.getWinner().getAlias();
-      const window = _buildWindow();
-      window.textContent = `Congratulations ${winnersName}, you have won!!!`;
+      const window = _buildWindow(
+        `Congratulations ${winnersName}, you have won!!!`
+      );
       window.prepend(buildPlayerMarkField());
       window.appendChild(buildResetOkButtonField());
       _body.appendChild(window);
@@ -632,9 +634,9 @@ const Render = (() => {
       }
     };
     const tieMessage = () => {
-      const window = _buildWindow();
-      window.textContent =
-        "No more moves available. The game has ended in a tie.";
+      const window = _buildWindow(
+        "No more moves available. The game has ended in a tie."
+      );
       window.appendChild(buildResetOkButtonField());
       _body.appendChild(window);
     };
@@ -645,14 +647,21 @@ const Render = (() => {
     const displayMenu = () => {
       const window = _buildWindow();
       window.className += " menu";
+      window.append(buildTitle("Menu"));
       window.append(buildForm());
 
       _body.append(window);
 
+      function buildTitle(content) {
+        const title=document.createElement("div")
+        title.textContent=content;
+        title.className="menu__title"
+        return title;
+      }
       function buildForm() {
         const formContainer = buildFormContainer();
         attachSelectors(formContainer);
-        formContainer.appendChild(buildMenuButtonField());
+        // formContainer.appendChild(buildMenuButtonField());
         return formContainer;
 
         function buildFormContainer() {
@@ -1004,3 +1013,4 @@ const GameController = (() => {
   };
   return { handleBoardCellClickEvent, handleSetPlayerClickEvent, resetAll };
 })();
+Render.Windows.displayMenu();
