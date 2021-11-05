@@ -524,32 +524,11 @@ const Render = (() => {
 
     function _addEventToCell(cell) {
       cell.addEventListener("click", (e) =>
-        handleBoardCellClickEvent(
+        GameController.handleBoardCellClickEvent(
           +e.target.dataset.row,
           +e.target.dataset.column
         )
       );
-    }
-
-    function handleBoardCellClickEvent(row, column) {
-      if (PlayerController.areAllPlayerAliasesSet() === false)
-        return document
-          .querySelector(".player-bar__entry-box")
-          .reportValidity();
-      if (GameBoard.getCell(row, column).getIsPlayed())
-        return console.log("cell played");
-      if (PlayerController.thereIsAWinner()) return Windows.winnerMessage();
-
-      const mark = PlayerController.getActivePlayer().getMark();
-      displayContentToCell(row, column, mark);
-      GameBoard.getCell(row, column).setContent(mark);
-      GameController._handleValidMoves(row, column);
-      _cycleActivePlayerAndHighlightNamePlate();
-    }
-
-    function _cycleActivePlayerAndHighlightNamePlate() {
-      PlayerController.cycleActivePlayerToNextPlayer();
-      PlayerBar.highlightActiveNamePlate();
     }
 
     function _selectCell(rowIndex, columnIndex) {
@@ -833,58 +812,76 @@ const Render = (() => {
 
 // GameController handles on click functions and interfaces with other controllers
 const GameController = (() => {
+  const handleBoardCellClickEvent = function (row, column) {
+    if (PlayerController.areAllPlayerAliasesSet() === false)
+      return document.querySelector(".player-bar__entry-box").reportValidity();
+    if (GameBoard.getCell(row, column).getIsPlayed())
+      return console.log("cell played");
+    if (PlayerController.thereIsAWinner()) return Windows.winnerMessage();
 
-  const _handleValidMoves = (row, column) => {
-    if (_isMoveWinner(row, column)) {
-      PlayerController.getActivePlayer().setIsWinner(true);
-      Render.Windows.winnerMessage();
+    const mark = PlayerController.getActivePlayer().getMark();
+    Render.GameBoardDisplay.displayContentToCell(row, column, mark);
+    GameBoard.getCell(row, column).setContent(mark);
+    _handleValidMoves(row, column);
+    _cycleActivePlayerAndHighlightNamePlate();
+
+    function _cycleActivePlayerAndHighlightNamePlate() {
+      PlayerController.cycleActivePlayerToNextPlayer();
+      Render.PlayerBar.highlightActiveNamePlate();
     }
-    if (GameBoard.areAllCellsPlayed()) return Render.Windows.tieMessage();
-  
-    function _isMoveWinner(row, column) {
-      return _isRowOrColumnWin(row, column) || _isDiaganolsWin(row, column);
-  
-      function _isRowOrColumnWin(row, column) {
-        return _isRowAWin(row) || _isColumnAWin(column);
-  
-        function _isRowAWin(row) {
-          return _isContentAMatch(GameBoard.GetNeighbors.getRowContent(row));
-        }
-        function _isColumnAWin(column) {
-          return _isContentAMatch(
-            GameBoard.GetNeighbors.getColumnContent(column)
-          );
-        }
+
+    function _handleValidMoves(row, column) {
+      if (_isMoveWinner(row, column)) {
+        PlayerController.getActivePlayer().setIsWinner(true);
+        Render.Windows.winnerMessage();
       }
-  
-      function _isDiaganolsWin(row, column) {
-        if (
-          GameBoard.isCellInBackDiagonal(row, column) &&
-          GameBoard.isCellInForwardDiagonal(row, column)
-        )
-          return (
-            _isContentAMatch(
+      if (GameBoard.areAllCellsPlayed()) return Render.Windows.tieMessage();
+
+      function _isMoveWinner(row, column) {
+        return _isRowOrColumnWin(row, column) || _isDiaganolsWin(row, column);
+
+        function _isRowOrColumnWin(row, column) {
+          return _isRowAWin(row) || _isColumnAWin(column);
+
+          function _isRowAWin(row) {
+            return _isContentAMatch(GameBoard.GetNeighbors.getRowContent(row));
+          }
+          function _isColumnAWin(column) {
+            return _isContentAMatch(
+              GameBoard.GetNeighbors.getColumnContent(column)
+            );
+          }
+        }
+
+        function _isDiaganolsWin(row, column) {
+          if (
+            GameBoard.isCellInBackDiagonal(row, column) &&
+            GameBoard.isCellInForwardDiagonal(row, column)
+          )
+            return (
+              _isContentAMatch(
+                GameBoard.GetNeighbors.getForwardDiagonalContent()
+              ) ||
+              _isContentAMatch(GameBoard.GetNeighbors.getBackDiagonalContent())
+            );
+          if (GameBoard.isCellInBackDiagonal(row, column))
+            return _isContentAMatch(
+              GameBoard.GetNeighbors.getBackDiagonalContent()
+            );
+          if (GameBoard.isCellInForwardDiagonal(row, column))
+            return _isContentAMatch(
               GameBoard.GetNeighbors.getForwardDiagonalContent()
-            ) || _isContentAMatch(GameBoard.GetNeighbors.getBackDiagonalContent())
-          );
-        if (GameBoard.isCellInBackDiagonal(row, column))
-          return _isContentAMatch(
-            GameBoard.GetNeighbors.getBackDiagonalContent()
-          );
-        if (GameBoard.isCellInForwardDiagonal(row, column))
-          return _isContentAMatch(
-            GameBoard.GetNeighbors.getForwardDiagonalContent()
-          );
+            );
+        }
+      }
+
+      function _isContentAMatch(content) {
+        return content.every((value, index, array) => value === array[0]);
       }
     }
-  
-    function _isContentAMatch(content) {
-      return content.every((value, index, array) => value === array[0]);
-    }
-  
   };
 
-  return { _handleValidMoves };
+  return { handleBoardCellClickEvent };
 })();
 
 // Menu module in charge of building form and logic for menu button
@@ -938,7 +935,6 @@ const Menu = (() => {
     container.appendChild(label);
     container.appendChild(selector);
     return container;
-
   }
   return { buildForm };
 })();
