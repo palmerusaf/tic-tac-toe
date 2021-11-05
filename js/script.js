@@ -698,27 +698,18 @@ const Render = (() => {
       button.type = "submit";
       button.value = "Set Player";
       button.dataset.index = index;
-      button.addEventListener("click", handleButtonEvent);
+      button.addEventListener("click", (e) =>
+        GameController.handleSetPlayerClickEvent(e)
+      );
       return button;
     }
-    function handleButtonEvent(event) {
-      const index = event.target.dataset.index;
-      const form = document.getElementById("player-form" + index);
-      const playerNameTextBoxValue = form[0].value;
-      const mark = form[1].value;
-      if (form[0].checkValidity() && form[1].checkValidity()) {
-        PlayerController.getPlayer(index).setMark(mark);
-        PlayerController.getPlayer(index).setAlias(playerNameTextBoxValue);
-        switchFormToNamePlate(playerNameTextBoxValue, index);
-      }
-    }
-    function switchFormToNamePlate(textBoxValue, index) {
+    const switchFormToNamePlate = function (textBoxValue, index) {
       const namePlate = buildPlayerNamePlate(textBoxValue, index);
       if (index == PlayerController.getActivePlayerIndex())
         namePlate.className += " player-bar__name-plate--active";
       insertPlayerNamePlate(namePlate, index);
       deletePlayerForm(index);
-    }
+    };
     function deletePlayerForm(index) {
       document.getElementById("player-form" + index).remove();
     }
@@ -767,7 +758,7 @@ const Render = (() => {
     };
 
     _body.appendChild(playerBarContainer());
-    return { reset, highlightActiveNamePlate };
+    return { reset, highlightActiveNamePlate, switchFormToNamePlate };
   })();
 
   return {
@@ -884,14 +875,24 @@ const GameController = (() => {
       }
     }
   };
-
+  const handleSetPlayerClickEvent = function (event) {
+    const index = event.target.dataset.index;
+    const form = document.getElementById("player-form" + index);
+    const playerNameTextBoxValue = form[0].value;
+    const mark = form[1].value;
+    if (form[0].checkValidity() && form[1].checkValidity()) {
+      PlayerController.getPlayer(index).setMark(mark);
+      PlayerController.getPlayer(index).setAlias(playerNameTextBoxValue);
+      Render.PlayerBar.switchFormToNamePlate(playerNameTextBoxValue, index);
+    }
+  };
   const resetAll = function () {
     GameBoard.reset();
     PlayerController.reset();
     Render.GameBoardDisplay.reset();
     Render.PlayerBar.reset();
   };
-  return { handleBoardCellClickEvent, resetAll };
+  return { handleBoardCellClickEvent, handleSetPlayerClickEvent, resetAll };
 })();
 
 // Menu module in charge of building form and logic for menu button
