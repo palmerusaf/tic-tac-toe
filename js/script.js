@@ -561,7 +561,11 @@ const Render = (() => {
       button.addEventListener("click", () => GameController.resetAll());
       return button;
     };
-
+    const buildCancelButton=()=>{
+      const button = _buildButton("Cancel");
+      button.addEventListener("click", () => Windows.closeWindow());
+      return button;
+    }
     const buildOkButton = () => {
       const button = _buildButton("OK");
       button.addEventListener("click", () => Windows.closeWindow());
@@ -582,17 +586,20 @@ const Render = (() => {
       return window;
     };
     function buildResetOkButtonField() {
-      const buttonField = document.createElement("span");
-      buttonField.className = "flex window__button-container";
+      const buttonField = buildButtonField()
       _attachButtonsToButtonField(buttonField);
       return buttonField;
-
       function _attachButtonsToButtonField(buttonField) {
         const resetButton = _Buttons.buildResetButton();
         resetButton.addEventListener("click", closeWindow);
         buttonField.appendChild(resetButton);
         buttonField.appendChild(_Buttons.buildOkButton());
       }
+    }
+    function buildButtonField(){
+      const buttonField = document.createElement("span");
+      buttonField.className = "flex window__button-container";
+      return buttonField;
     }
     const winnerMessage = () => {
       const winnersName = PlayerController.getWinner().getAlias();
@@ -620,67 +627,62 @@ const Render = (() => {
       window.remove();
     };
     const displayMenu = () => {
-
-      function buildButtonField(){
-
-      }
+      const window=_buildWindow();
+      window.append(buildForm());
+      _body.append(window);
+      function buildForm(){
+        const formContainer = buildFormContainer();
+        formContainer.appendChild(_buildGridSizeSelector());
+        formContainer.appendChild(_buildNumOfPlayersSelector());
+        formContainer.appendChild(_buildSubmitButton());
+        formContainer.appendChild(_buildCancelButton());
+        return formContainer;
+        function buildFormContainer() {
+          const container = document.createElement("form");
+          container.className = "flex-col menu-form";
+          container.action = "#";
+          container.onsubmit = "return false";
+          return container;
+        }
+        function _buildGridSizeSelector() {
+          const selectorValues = [3, 5, 7, 9];
+          return _buildSelectorElement(
+            "Grid Size",
+            "grid-size",
+            "size",
+            selectorValues
+          );
+        }
+        function _buildNumOfPlayersSelector() {
+          const selectorValues = [2, 3, 4];
+          return _buildSelectorElement(
+            "Number of Players",
+            "player-num",
+            "number",
+            selectorValues
+          );
+        }
+        function _buildSelectorElement(
+          labelContent,
+          id,
+          placeHolderLabel,
+          arrayOfValues
+        ) {
+          const container = document.createElement("span");
+          const label = buildLabel(labelContent, id);
+          const selector = buildSelector(id, arrayOfValues);
+          const placeHolder = buildPlaceHolder(placeHolderLabel);
+          container.className = "menu-form__element";
+          selector.prepend(placeHolder);
+          container.appendChild(label);
+          container.appendChild(selector);
+          return container;
+        }
+      };
     };
     return { winnerMessage, tieMessage, displayMenu, closeWindow};
   })();
 
-  const _MenuForm = (() => {
-    const buildForm = () => {
-      const container = _buildContainer();
-      container.appendChild(_buildGridSizeSelector());
-      container.appendChild(_buildNumOfPlayersSelector());
-      container.appendChild(_buildSubmitButton());
-      container.appendChild(_buildCancelButton());
-      return container;
-    };
-    function _buildContainer() {
-      const container = document.createElement("form");
-      container.className = "flex-col menu-form";
-      container.action = "#";
-      container.onsubmit = "return false";
-      return container;
-    }
-
-    function _buildGridSizeSelector() {
-      const selectorValues = [3, 5, 7, 9];
-      return _buildSelectorElement(
-        "Grid Size",
-        "grid-size",
-        "size",
-        selectorValues
-      );
-    }
-    function _buildNumOfPlayersSelector() {
-      const selectorValues = [2, 3, 4];
-      return _buildSelectorElement(
-        "Number of Players",
-        "player-num",
-        "number",
-        selectorValues
-      );
-    }
-    function _buildSelectorElement(
-      labelContent,
-      id,
-      placeHolderLabel,
-      arrayOfValues
-    ) {
-      const container = document.createElement("span");
-      const label = buildLabel(labelContent, id);
-      const selector = buildSelector(id, arrayOfValues);
-      const placeHolder = buildPlaceHolder(placeHolderLabel);
-      container.className = "menu-form__element";
-      selector.prepend(placeHolder);
-      container.appendChild(label);
-      container.appendChild(selector);
-      return container;
-    }
-    return { buildForm };
-  })();
 
   const PlayerBar = (() => {
     const _NUM_OF_PLAYERS = PlayerController.getNumOfPlayers();
