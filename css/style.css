@@ -25,7 +25,7 @@
   width: 90px;
   flex: 0 0 auto; }
 
-.msg-window {
+.window {
   position: absolute;
   margin-top: 8.5em;
   padding: 5em;
@@ -34,11 +34,11 @@
   z-index: 1;
   background: rgba(255, 255, 255, 0.7);
   outline: black solid 1px; }
-  .msg-window__button-container {
+  .window__button-container {
     gap: 8px;
     justify-content: center;
     margin-top: 2em; }
-  .msg-window__mark-field {
+  .window__mark-field {
     align-self: center;
     font-size: 3em; }
 
