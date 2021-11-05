@@ -66,5 +66,9 @@
   gap: 2px;
   text-align: left;
   text-decoration: 0; }
+.menu__form-element {
+  display: flex;
+  justify-content: space-between;
+  gap: 2em; }
 
 /*# sourceMappingURL=style.css.map */
