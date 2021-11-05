@@ -571,64 +571,65 @@ const Render = (() => {
       button.addEventListener("click", () => Windows.displayMenu());
       return button;
     };
-    return { resetButton, okButton,menuButton };
+    return { resetButton, okButton, menuButton };
   })();
 
   const Windows = (() => {
-    const _messageWindow = (message) => {
+    const _buildMsgWindow = (message) => {
       const window = document.createElement("div");
       window.className = "flex-col msg-window";
       window.textContent = message;
-      const buttonField = _buildButtonField();
-      window.appendChild(buttonField);
       return window;
+    };
+    function buildResetOkButtonField() {
+      const buttonField = document.createElement("span");
+      buttonField.className = "flex msg-window__button-container";
+      _attachButtonsToButtonField(buttonField);
+      return buttonField;
 
-      function _buildButtonField() {
-        const buttonField = document.createElement("span");
-        buttonField.className = "flex msg-window__button-container";
-        _attachButtonsToButtonField(buttonField);
-        return buttonField;
+      function _attachButtonsToButtonField(buttonField) {
+        const resetButton = _Buttons.resetButton();
+        _attachMsgWindowPropertiesToButton(resetButton);
+        const okButton = _Buttons.okButton();
+        _attachMsgWindowPropertiesToButton(okButton);
+        buttonField.appendChild(resetButton);
+        buttonField.appendChild(okButton);
 
-        function _attachButtonsToButtonField(buttonField) {
-          const resetButton = _Buttons.resetButton();
-          _attachMsgWindowPropertiesToButton(resetButton);
-          const okButton = _Buttons.okButton();
-          _attachMsgWindowPropertiesToButton(okButton);
-          buttonField.appendChild(resetButton);
-          buttonField.appendChild(okButton);
+        function _attachMsgWindowPropertiesToButton(button) {
+          button.className += " msg-window__button";
+          button.addEventListener("click", _closeMsgWindow);
 
-          function _attachMsgWindowPropertiesToButton(button) {
-            button.className += " msg-window__button";
-            button.addEventListener("click", _closeMsgWindow);
-
-            function _closeMsgWindow() {
-              const window = document.querySelector(".msg-window");
-              window.remove();
-            }
+          function _closeMsgWindow() {
+            const window = document.querySelector(".msg-window");
+            window.remove();
           }
         }
       }
-    };
-
+    }
     const winnerMessage = () => {
       const winnersName = PlayerController.getWinner().getAlias();
-      const markField = document.createElement("div");
-      const msgWindow = _messageWindow(
+      const msgWindow = _buildMsgWindow(
         `Congratulations ${winnersName}, you have won!!!`
       );
-      markField.className = "msg-window__mark-field";
-      markField.textContent = PlayerController.getWinner().getMark();
-      markField.textContent = PlayerController.getWinner().getMark();
-      msgWindow.prepend(markField);
-
+      msgWindow.prepend(buildPlayerMarkField());
+      msgWindow.appendChild(buildResetOkButtonField());
+      _body.appendChild(msgWindow);
+      function buildPlayerMarkField() {
+        const markField = document.createElement("div");
+        markField.className = "msg-window__mark-field";
+        markField.textContent = PlayerController.getWinner().getMark();
+        return markField;
+      }
+    };
+    const tieMessage = () => {
+      const msgWindow = _buildMsgWindow(
+        "No more moves available. The game has ended in a tie."
+      );
+      msgWindow.appendChild(buildResetOkButtonField());
       _body.appendChild(msgWindow);
     };
-    const tieMessage = () =>
-      _body.appendChild(
-        _messageWindow("No more moves available. The game has ended in a tie.")
-      );
-
-    return { winnerMessage, tieMessage, };
+    const displayMenu = () => {};
+    return { winnerMessage, tieMessage, displayMenu };
   })();
 
   const _MenuForm = (() => {
@@ -694,9 +695,10 @@ const Render = (() => {
       container.appendChild(buttonField());
       return container;
     }
-    function buttonField(){
-      const container = document.createElement("span")
-      container.className="flex player-bar__button-field player-bar__player-form"
+    function buttonField() {
+      const container = document.createElement("span");
+      container.className =
+        "flex player-bar__button-field player-bar__player-form";
       container.appendChild(_Buttons.menuButton());
       container.appendChild(_Buttons.resetButton());
       return container;
