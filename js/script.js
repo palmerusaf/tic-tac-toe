@@ -524,32 +524,11 @@ const Render = (() => {
 
     function _addEventToCell(cell) {
       cell.addEventListener("click", (e) =>
-        handleBoardCellClickEvent(
+        GameController.handleBoardCellClickEvent(
           +e.target.dataset.row,
           +e.target.dataset.column
         )
       );
-    }
-
-    function handleBoardCellClickEvent(row, column) {
-      if (PlayerController.areAllPlayerAliasesSet() === false)
-        return document
-          .querySelector(".player-bar__entry-box")
-          .reportValidity();
-      if (GameBoard.getCell(row, column).getIsPlayed())
-        return console.log("cell played");
-      if (PlayerController.thereIsAWinner()) return Windows.winnerMessage();
-
-      const mark = PlayerController.getActivePlayer().getMark();
-      displayContentToCell(row, column, mark);
-      GameBoard.getCell(row, column).setContent(mark);
-      GameController.handleMove(row, column);
-      _cycleActivePlayerAndHighlightNamePlate();
-    }
-
-    function _cycleActivePlayerAndHighlightNamePlate() {
-      PlayerController.cycleActivePlayerToNextPlayer();
-      PlayerBar.highlightActiveNamePlate();
     }
 
     function _selectCell(rowIndex, columnIndex) {
@@ -579,15 +558,8 @@ const Render = (() => {
 
     const resetButton = () => {
       const button = _buildButton("Reset Game");
-      button.addEventListener("click", resetAll);
+      button.addEventListener("click", () => GameController.resetAll());
       return button;
-
-      function resetAll() {
-        GameBoard.reset();
-        PlayerController.reset();
-        GameBoardDisplay.reset();
-        PlayerBar.reset();
-      }
     };
 
     const okButton = () => {
@@ -726,45 +698,36 @@ const Render = (() => {
       button.type = "submit";
       button.value = "Set Player";
       button.dataset.index = index;
-      button.addEventListener("click", handleButtonEvent);
+      button.addEventListener("click", (e) =>
+        GameController.handleSetPlayerClickEvent(e)
+      );
       return button;
     }
-    function handleButtonEvent(event) {
-      const index = event.target.dataset.index;
-      const form = document.getElementById("player-form" + index);
-      const playerNameTextBoxValue = form[0].value;
-      const mark = form[1].value;
-      if (form[0].checkValidity() && form[1].checkValidity()) {
-        PlayerController.getPlayer(index).setMark(mark);
-        PlayerController.getPlayer(index).setAlias(playerNameTextBoxValue);
-        switchFormToNamePlate(playerNameTextBoxValue, index);
-      }
-    }
-    function switchFormToNamePlate(textBoxValue, index) {
+    const switchFormToNamePlate = function (textBoxValue, index) {
       const namePlate = buildPlayerNamePlate(textBoxValue, index);
       if (index == PlayerController.getActivePlayerIndex())
         namePlate.className += " player-bar__name-plate--active";
       insertPlayerNamePlate(namePlate, index);
       deletePlayerForm(index);
-    }
-    function deletePlayerForm(index) {
-      document.getElementById("player-form" + index).remove();
-    }
-    function buildPlayerNamePlate(textBoxValue, index) {
-      const namePlate = document.createElement("div");
-      const playerMark = PlayerController.getPlayer(index).getMark();
-      namePlate.className = "player-bar__name-plate";
-      namePlate.id = "player-name-plate" + index;
-      namePlate.textContent = `${textBoxValue} ${playerMark}`;
-      return namePlate;
-    }
-    function insertPlayerNamePlate(namePlate, index) {
-      const playerFieldContainer = document.querySelector(
-        ".player-bar__player-field"
-      );
-      const form = document.getElementById("player-form" + index);
-      playerFieldContainer.insertBefore(namePlate, form);
-    }
+      function deletePlayerForm(index) {
+        document.getElementById("player-form" + index).remove();
+      }
+      function buildPlayerNamePlate(textBoxValue, index) {
+        const namePlate = document.createElement("div");
+        const playerMark = PlayerController.getPlayer(index).getMark();
+        namePlate.className = "player-bar__name-plate";
+        namePlate.id = "player-name-plate" + index;
+        namePlate.textContent = `${textBoxValue} ${playerMark}`;
+        return namePlate;
+      }
+      function insertPlayerNamePlate(namePlate, index) {
+        const playerFieldContainer = document.querySelector(
+          ".player-bar__player-field"
+        );
+        const form = document.getElementById("player-form" + index);
+        playerFieldContainer.insertBefore(namePlate, form);
+      }
+    };
 
     const highlightActiveNamePlate = () => {
       function _removeAllHighlights() {
@@ -795,7 +758,7 @@ const Render = (() => {
     };
 
     _body.appendChild(playerBarContainer());
-    return { reset, highlightActiveNamePlate };
+    return { reset, highlightActiveNamePlate, switchFormToNamePlate };
   })();
 
   return {
@@ -831,58 +794,105 @@ const Render = (() => {
   //*/
 }
 
-// GameController controls logic responsible for determining the winner
+// GameController handles on click functions and interfaces with other controllers
 const GameController = (() => {
-  function _isMoveWinner(row, column) {
-    return _isRowOrColumnWin(row, column) || _isDiaganolsWin(row, column);
+  const handleBoardCellClickEvent = function (row, column) {
+    isMoveInvalid(row, column)
+      ? handleInvalidMoves()
+      : handleValidMoves(row, column);
 
-    function _isRowOrColumnWin(row, column) {
-      return _isRowAWin(row) || _isColumnAWin(column);
-
-      function _isRowAWin(row) {
-        return _isContentAMatch(GameBoard.GetNeighbors.getRowContent(row));
+    function isMoveInvalid(row, column) {
+      return (
+        PlayerController.areAllPlayerAliasesSet() === false ||
+        GameBoard.getCell(row, column).getIsPlayed() ||
+        PlayerController.thereIsAWinner() ||
+        GameBoard.areAllCellsPlayed()
+      );
+    }
+    function handleInvalidMoves() {
+      if (PlayerController.areAllPlayerAliasesSet() === false)
+        return document
+          .querySelector(".player-bar__entry-box")
+          .reportValidity();
+      if (PlayerController.thereIsAWinner()) return Windows.winnerMessage();
+      if (GameBoard.areAllCellsPlayed()) return Render.Windows.tieMessage();
+    }
+    function handleValidMoves(row, column) {
+      recordPlayerMark(row, column);
+      handleWinningMoves(row, column);
+      cycleActivePlayerAndHighlightNamePlate();
+      function recordPlayerMark(row, column) {
+        const mark = PlayerController.getActivePlayer().getMark();
+        Render.GameBoardDisplay.displayContentToCell(row, column, mark);
+        GameBoard.getCell(row, column).setContent(mark);
       }
-      function _isColumnAWin(column) {
-        return _isContentAMatch(
-          GameBoard.GetNeighbors.getColumnContent(column)
-        );
+      function cycleActivePlayerAndHighlightNamePlate() {
+        PlayerController.cycleActivePlayerToNextPlayer();
+        Render.PlayerBar.highlightActiveNamePlate();
+      }
+      function handleWinningMoves(row, column) {
+        if (isMoveWinner(row, column)) {
+          PlayerController.getActivePlayer().setIsWinner(true);
+          Render.Windows.winnerMessage();
+        }
+        function isMoveWinner(row, column) {
+          return isRowOrColumnWin(row, column) || isDiaganolsWin(row, column);
+          function isRowOrColumnWin(row, column) {
+            return isRowAWin(row) || isColumnAWin(column);
+            function isRowAWin(row) {
+              return isContentAMatch(GameBoard.GetNeighbors.getRowContent(row));
+            }
+            function isColumnAWin(column) {
+              return isContentAMatch(
+                GameBoard.GetNeighbors.getColumnContent(column)
+              );
+            }
+          }
+          function isDiaganolsWin(row, column) {
+            if (
+              GameBoard.isCellInBackDiagonal(row, column) &&
+              GameBoard.isCellInForwardDiagonal(row, column)
+            )
+              return (
+                isContentAMatch(
+                  GameBoard.GetNeighbors.getForwardDiagonalContent()
+                ) ||
+                isContentAMatch(GameBoard.GetNeighbors.getBackDiagonalContent())
+              );
+            if (GameBoard.isCellInBackDiagonal(row, column))
+              return isContentAMatch(
+                GameBoard.GetNeighbors.getBackDiagonalContent()
+              );
+            if (GameBoard.isCellInForwardDiagonal(row, column))
+              return isContentAMatch(
+                GameBoard.GetNeighbors.getForwardDiagonalContent()
+              );
+          }
+          function isContentAMatch(content) {
+            return content.every((value, index, array) => value === array[0]);
+          }
+        }
       }
     }
-
-    function _isDiaganolsWin(row, column) {
-      if (
-        GameBoard.isCellInBackDiagonal(row, column) &&
-        GameBoard.isCellInForwardDiagonal(row, column)
-      )
-        return (
-          _isContentAMatch(
-            GameBoard.GetNeighbors.getForwardDiagonalContent()
-          ) || _isContentAMatch(GameBoard.GetNeighbors.getBackDiagonalContent())
-        );
-      if (GameBoard.isCellInBackDiagonal(row, column))
-        return _isContentAMatch(
-          GameBoard.GetNeighbors.getBackDiagonalContent()
-        );
-      if (GameBoard.isCellInForwardDiagonal(row, column))
-        return _isContentAMatch(
-          GameBoard.GetNeighbors.getForwardDiagonalContent()
-        );
-    }
-  }
-
-  function _isContentAMatch(content) {
-    return content.every((value, index, array) => value === array[0]);
-  }
-
-  const handleMove = (row, column) => {
-    if (_isMoveWinner(row, column)) {
-      PlayerController.getActivePlayer().setIsWinner(true);
-      Render.Windows.winnerMessage();
-    }
-    if (GameBoard.areAllCellsPlayed()) return Render.Windows.tieMessage();
   };
-
-  return { handleMove };
+  const handleSetPlayerClickEvent = function (event) {
+    const index = event.target.dataset.index;
+    const form = document.getElementById("player-form" + index);
+    const playerNameTextBoxValue = form[0].value;
+    const mark = form[1].value;
+    if (form[0].checkValidity() && form[1].checkValidity()) {
+      PlayerController.getPlayer(index).setMark(mark);
+      PlayerController.getPlayer(index).setAlias(playerNameTextBoxValue);
+      Render.PlayerBar.switchFormToNamePlate(playerNameTextBoxValue, index);
+    }
+  };
+  const resetAll = function () {
+    GameBoard.reset();
+    PlayerController.reset();
+    Render.GameBoardDisplay.reset();
+    Render.PlayerBar.reset();
+  };
+  return { handleBoardCellClickEvent, handleSetPlayerClickEvent, resetAll };
 })();
 
 // Menu module in charge of building form and logic for menu button
@@ -936,7 +946,6 @@ const Menu = (() => {
     container.appendChild(label);
     container.appendChild(selector);
     return container;
-
   }
   return { buildForm };
 })();
