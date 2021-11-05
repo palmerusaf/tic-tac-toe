@@ -709,25 +709,25 @@ const Render = (() => {
         namePlate.className += " player-bar__name-plate--active";
       insertPlayerNamePlate(namePlate, index);
       deletePlayerForm(index);
+      function deletePlayerForm(index) {
+        document.getElementById("player-form" + index).remove();
+      }
+      function buildPlayerNamePlate(textBoxValue, index) {
+        const namePlate = document.createElement("div");
+        const playerMark = PlayerController.getPlayer(index).getMark();
+        namePlate.className = "player-bar__name-plate";
+        namePlate.id = "player-name-plate" + index;
+        namePlate.textContent = `${textBoxValue} ${playerMark}`;
+        return namePlate;
+      }
+      function insertPlayerNamePlate(namePlate, index) {
+        const playerFieldContainer = document.querySelector(
+          ".player-bar__player-field"
+        );
+        const form = document.getElementById("player-form" + index);
+        playerFieldContainer.insertBefore(namePlate, form);
+      }
     };
-    function deletePlayerForm(index) {
-      document.getElementById("player-form" + index).remove();
-    }
-    function buildPlayerNamePlate(textBoxValue, index) {
-      const namePlate = document.createElement("div");
-      const playerMark = PlayerController.getPlayer(index).getMark();
-      namePlate.className = "player-bar__name-plate";
-      namePlate.id = "player-name-plate" + index;
-      namePlate.textContent = `${textBoxValue} ${playerMark}`;
-      return namePlate;
-    }
-    function insertPlayerNamePlate(namePlate, index) {
-      const playerFieldContainer = document.querySelector(
-        ".player-bar__player-field"
-      );
-      const form = document.getElementById("player-form" + index);
-      playerFieldContainer.insertBefore(namePlate, form);
-    }
 
     const highlightActiveNamePlate = () => {
       function _removeAllHighlights() {
