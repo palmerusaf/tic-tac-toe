@@ -627,6 +627,60 @@ const Render = (() => {
     return { winnerMessage, tieMessage };
   })();
 
+  const _MenuForm = (() => {
+    const buildForm = () => {
+      const container = _buildContainer();
+      container.appendChild(_buildGridSizeSelector());
+      container.appendChild(_buildNumOfPlayersSelector());
+      container.appendChild(_buildSubmitButton());
+      container.appendChild(_buildCancelButton());
+      return container;
+    };
+    function _buildContainer() {
+      const container = document.createElement("form");
+      container.className = "flex-col menu-form";
+      container.action = "#";
+      container.onsubmit = "return false";
+      return container;
+    }
+  
+    function _buildGridSizeSelector() {
+      const selectorValues = [3, 5, 7, 9];
+      return _buildSelectorElement(
+        "Grid Size",
+        "grid-size",
+        "size",
+        selectorValues
+      );
+    }
+    function _buildNumOfPlayersSelector() {
+      const selectorValues = [2, 3, 4];
+      return _buildSelectorElement(
+        "Number of Players",
+        "player-num",
+        "number",
+        selectorValues
+      );
+    }
+    function _buildSelectorElement(
+      labelContent,
+      id,
+      placeHolderLabel,
+      arrayOfValues
+    ) {
+      const container = document.createElement("span");
+      const label = buildLabel(labelContent, id);
+      const selector = buildSelector(id, arrayOfValues);
+      const placeHolder = buildPlaceHolder(placeHolderLabel);
+      container.className = "menu-form__element";
+      selector.prepend(placeHolder);
+      container.appendChild(label);
+      container.appendChild(selector);
+      return container;
+    }
+    return { buildForm };
+  })();
+  
   const PlayerBar = (() => {
     const _NUM_OF_PLAYERS = PlayerController.getNumOfPlayers();
     function playerBarContainer() {
@@ -893,59 +947,4 @@ const GameController = (() => {
     Render.PlayerBar.reset();
   };
   return { handleBoardCellClickEvent, handleSetPlayerClickEvent, resetAll };
-})();
-
-// Menu module in charge of building form and logic for menu button
-const Menu = (() => {
-  const buildForm = () => {
-    const container = _buildContainer();
-    container.appendChild(_buildGridSizeSelector());
-    container.appendChild(_buildNumOfPlayersSelector());
-    container.appendChild(_buildSubmitButton());
-    container.appendChild(_buildCancelButton());
-    return container;
-  };
-  function _buildContainer() {
-    const container = document.createElement("form");
-    container.className = "flex-col menu-form";
-    container.action = "#";
-    container.onsubmit = "return false";
-    return container;
-  }
-
-  function _buildGridSizeSelector() {
-    const selectorValues = [3, 5, 7, 9];
-    return _buildSelectorElement(
-      "Grid Size",
-      "grid-size",
-      "size",
-      selectorValues
-    );
-  }
-  function _buildNumOfPlayersSelector() {
-    const selectorValues = [2, 3, 4];
-    return _buildSelectorElement(
-      "Number of Players",
-      "player-num",
-      "number",
-      selectorValues
-    );
-  }
-  function _buildSelectorElement(
-    labelContent,
-    id,
-    placeHolderLabel,
-    arrayOfValues
-  ) {
-    const container = document.createElement("span");
-    const label = buildLabel(labelContent, id);
-    const selector = buildSelector(id, arrayOfValues);
-    const placeHolder = buildPlaceHolder(placeHolderLabel);
-    container.className = "menu-form__element";
-    selector.prepend(placeHolder);
-    container.appendChild(label);
-    container.appendChild(selector);
-    return container;
-  }
-  return { buildForm };
 })();
