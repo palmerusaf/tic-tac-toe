@@ -59,6 +59,11 @@ body{
   color: #efca07;
   background-color: #ca8123;
   outline:solid 3px #6f2f12;
+  &:focus,
+  &:hover{
+    background-color: white;
+    color: #ca8123;
+  }
 }
 
 .window {
