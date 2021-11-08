@@ -57,9 +57,16 @@ const GameBoard = (() => {
     for (let rowIndex = 0; rowIndex < _GRID_SIZE; rowIndex++)
       for (let columnIndex = 0; columnIndex < _GRID_SIZE; ++columnIndex)
         _cells.push(BoardCell(rowIndex, columnIndex));
-    return _cells;
   };
-  _cells = _initCellArray();
+  _initCellArray();
+
+  const reInitCellArray = () => {
+    deleteCellArray();
+    _initCellArray();
+    function deleteCellArray() {
+      _cells.length = 0;
+    }
+  };
 
   const getCell = (rowIndex, columnIndex) =>
     _cells.filter(
@@ -123,6 +130,7 @@ const GameBoard = (() => {
     isCellInForwardDiagonal,
     GetNeighbors,
     areAllCellsPlayed,
+    reInitCellArray,
     reset,
   };
 })();
@@ -319,13 +327,13 @@ const PlayerController = (() => {
   };
   _initPlayers();
 
-  const reInitPlayers=()=>{
+  const reInitPlayers = () => {
     deleteAllPlayers();
     _initPlayers();
-    function deleteAllPlayers(){
-      return _players.length=0;
+    function deleteAllPlayers() {
+      return (_players.length = 0);
     }
-  }
+  };
 
   const getNumOfPlayers = () => _NUM_OF_PLAYERS;
   const setNumOfPlayers = (newAmount) => (_NUM_OF_PLAYERS = newAmount);
