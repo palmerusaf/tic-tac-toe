@@ -1015,7 +1015,11 @@ const GameController = (() => {
   const setNewSettings = function () {
     const selectors = [...document.querySelectorAll(".menu__form select")];
     if (areSelectorsSelected(selectors)) {
-    
+      const newGridSize = selectors[0].value;
+      const newNumOfPlayers = selectors[1].value;
+      GameBoard.setGridSize(newGridSize);
+      PlayerController.setNumOfPlayers(newNumOfPlayers);
+      resetAll();
     }
     function areSelectorsSelected() {
       return selectors.every((selector) => selector.checkValidity());
