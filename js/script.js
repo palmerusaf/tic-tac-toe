@@ -1081,4 +1081,3 @@ const GameController = (() => {
     resetAll,
   };
 })();
-Render.Windows.displayMenu();
