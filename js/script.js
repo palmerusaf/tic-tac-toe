@@ -51,7 +51,7 @@ const GameBoard = (() => {
 
   const getGridSize = () => _GRID_SIZE;
 
-  const setGridSize=(newSize)=>_GRID_SIZE=newSize;
+  const setGridSize = (newSize) => (_GRID_SIZE = newSize);
 
   const _initCellArray = () => {
     for (let rowIndex = 0; rowIndex < _GRID_SIZE; rowIndex++)
@@ -319,6 +319,7 @@ const PlayerController = (() => {
   })();
 
   const getNumOfPlayers = () => _NUM_OF_PLAYERS;
+  const setNumOfPlayers = (newAmount) => _NUM_OF_PLAYERS=newAmount;
 
   const getPlayer = (playerIndex) => _players[playerIndex];
 
@@ -356,6 +357,7 @@ const PlayerController = (() => {
 
   return {
     getNumOfPlayers,
+    setNumOfPlayers,
     getPlayer,
     getActivePlayer,
     areAllPlayerAliasesSet,
