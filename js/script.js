@@ -46,7 +46,7 @@ console.log(nc.setPlayersMark("O"));
 
 // GameBoard module handles all data access and initialization
 const GameBoard = (() => {
-  const _GRID_SIZE = 3;
+  let _GRID_SIZE = 3;
   let _cells = [];
 
   const getGridSize = () => _GRID_SIZE;
@@ -309,7 +309,7 @@ const Player = () => {
 }
 
 const PlayerController = (() => {
-  const _NUM_OF_PLAYERS = 2;
+  let _NUM_OF_PLAYERS = 2;
   let _players = [];
   const _initilizePlayers = (() => {
     for (let index = 0; index < _NUM_OF_PLAYERS; index++) {
@@ -319,7 +319,7 @@ const PlayerController = (() => {
   })();
 
   const getNumOfPlayers = () => _NUM_OF_PLAYERS;
-  const setNumOfPlayers = (newAmount) => _NUM_OF_PLAYERS=newAmount;
+  const setNumOfPlayers = (newAmount) => (_NUM_OF_PLAYERS = newAmount);
 
   const getPlayer = (playerIndex) => _players[playerIndex];
 
