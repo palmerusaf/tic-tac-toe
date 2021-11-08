@@ -626,11 +626,26 @@ const Render = (() => {
   })();
 
   const Windows = (() => {
-    const _buildWindow = (message) => {
+    const _buildWindow = (title, message) => {
       const window = document.createElement("div");
-      window.textContent = message;
       window.className = "flex-col window";
+      window.appendChild(buildTitle(title));
+      window.appendChild(buildMessage(message));
       return window;
+
+      function buildTitle(content) {
+        const title = document.createElement("div");
+        title.textContent = content;
+        title.className = "window__title";
+        return title;
+      }
+
+      function buildMessage(content) {
+        const message = document.createElement("div");
+        message.textContent = content;
+        message.className = "window__message";
+        return message;
+      }
     };
     function buildResetOkButtonField() {
       const buttonField = buildButtonField();
@@ -659,10 +674,10 @@ const Render = (() => {
     }
     const winnerMessage = () => {
       const winnersName = PlayerController.getWinner().getAlias();
-      const window = _buildWindow(
-        `Congratulations ${winnersName}, you have won!!!`
-      );
-      window.prepend(buildPlayerMarkField());
+      const title = "Winner!!!";
+      const message = `Congratulations ${winnersName}, you have won!!!`;
+      const window = _buildWindow(title, message);
+      window.appendChild(buildPlayerMarkField());
       window.appendChild(buildResetOkButtonField());
       _body.appendChild(window);
       function buildPlayerMarkField() {
@@ -673,9 +688,9 @@ const Render = (() => {
       }
     };
     const tieMessage = () => {
-      const window = _buildWindow(
-        "No more moves available. The game has ended in a tie."
-      );
+      const title = "Tie!!!";
+      const message = "No more moves available. The game has ended in a tie.";
+      const window = _buildWindow(title, message);
       window.appendChild(buildResetOkButtonField());
       _body.appendChild(window);
     };
@@ -684,19 +699,12 @@ const Render = (() => {
       window.remove();
     };
     const displayMenu = () => {
-      const window = _buildWindow();
+      const window = _buildWindow("Menu");
       window.className += " menu";
-      window.append(buildTitle("Menu"));
       window.append(buildForm());
 
       _body.append(window);
 
-      function buildTitle(content) {
-        const title = document.createElement("div");
-        title.textContent = content;
-        title.className = "menu__title";
-        return title;
-      }
       function buildForm() {
         const formContainer = buildFormContainer();
         attachSelectors(formContainer);

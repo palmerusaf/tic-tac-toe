@@ -34,6 +34,12 @@
   z-index: 1;
   background: rgba(255, 255, 255, 0.7);
   outline: black solid 1px; }
+  .window__title {
+    text-align: center;
+    text-decoration: underline;
+    font-size: 24px;
+    margin-top: -2em;
+    padding-bottom: .5em; }
   .window__button-container {
     gap: 8px;
     justify-content: center;
@@ -58,12 +64,6 @@
     .player-bar__name-plate--active {
       transform: scale(1.5); }
 
-.menu__title {
-  text-align: center;
-  text-decoration: underline;
-  font-size: 24px;
-  margin-top: -2em;
-  padding-bottom: .5em; }
 .menu__form {
   gap: 2px;
   text-align: left;
