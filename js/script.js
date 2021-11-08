@@ -51,6 +51,8 @@ const GameBoard = (() => {
 
   const getGridSize = () => _GRID_SIZE;
 
+  const setGridSize=(newSize)=>_GRID_SIZE=newSize;
+
   const _initCellArray = () => {
     for (let rowIndex = 0; rowIndex < _GRID_SIZE; rowIndex++)
       for (let columnIndex = 0; columnIndex < _GRID_SIZE; ++columnIndex)
@@ -115,12 +117,13 @@ const GameBoard = (() => {
   const areAllCellsPlayed = () => _cells.every((cell) => cell.getIsPlayed());
   return {
     getGridSize,
+    setGridSize,
     getCell,
     isCellInBackDiagonal,
     isCellInForwardDiagonal,
     GetNeighbors,
-    reset,
     areAllCellsPlayed,
+    reset,
   };
 })();
 // GameBoard Tests
