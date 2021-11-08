@@ -576,7 +576,13 @@ const Render = (() => {
       button.addEventListener("click", () => Windows.displayMenu());
       return button;
     };
-    const buildSubmitButton = () => {};
+    const buildSubmitButton = () => {
+      const button = _buildButton("Submit");
+      button.addEventListener("click", () => {
+        GameController.setNewSettings();
+      });
+      return button;
+    };
     return {
       buildResetButton,
       buildOkButton,
@@ -653,15 +659,15 @@ const Render = (() => {
       _body.append(window);
 
       function buildTitle(content) {
-        const title=document.createElement("div")
-        title.textContent=content;
-        title.className="menu__title"
+        const title = document.createElement("div");
+        title.textContent = content;
+        title.className = "menu__title";
         return title;
       }
       function buildForm() {
         const formContainer = buildFormContainer();
         attachSelectors(formContainer);
-        // formContainer.appendChild(buildMenuButtonField());
+        formContainer.appendChild(buildMenuButtonField());
         return formContainer;
 
         function buildFormContainer() {
@@ -690,6 +696,7 @@ const Render = (() => {
           function buildSelectorContainer(id, options, labelContent) {
             const container = buildFormElementContainer();
             const selector = buildSelector(id);
+            selector.required = true;
             attachOptionsToSelector(options, selector);
             container.appendChild(buildLabel(id, labelContent));
             container.appendChild(selector);
@@ -1005,12 +1012,23 @@ const GameController = (() => {
       Render.PlayerBar.switchFormToNamePlate(playerNameTextBoxValue, index);
     }
   };
+  const setNewSettings = function () {
+    if (areSelectorsSelected()) return Render.Windows.closeWindow();
+    function areSelectorsSelected() {
+      const selectors = [...document.querySelectorAll(".menu__form select")];
+      return selectors.every((selector) => selector.checkValidity());
+    }
+  };
   const resetAll = function () {
     GameBoard.reset();
     PlayerController.reset();
     Render.GameBoardDisplay.reset();
     Render.PlayerBar.reset();
   };
-  return { handleBoardCellClickEvent, handleSetPlayerClickEvent, resetAll };
+  return {
+    handleBoardCellClickEvent,
+    handleSetPlayerClickEvent,
+    setNewSettings,
+    resetAll,
+  };
 })();
-Render.Windows.displayMenu();
