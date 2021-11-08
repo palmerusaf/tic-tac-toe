@@ -11,14 +11,14 @@
   outline: white solid 1px;
   width: 500px;
   height: 500px;
-  margin: 2em; }
+  margin: 40px;
+  font-size: 400px; }
   .board__cell {
     outline: black solid 1px;
     justify-content: center;
     align-items: center;
     vertical-align: middle;
-    font-family: sans-serif;
-    font-size: 7rem; }
+    font-family: sans-serif; }
 
 .button {
   padding: 2px;
@@ -44,6 +44,8 @@
 
 .player-bar {
   justify-content: space-around; }
+  .player-bar__player-field {
+    flex-wrap: wrap; }
   .player-bar__player-form {
     gap: 8px; }
   .player-bar__entry-box {

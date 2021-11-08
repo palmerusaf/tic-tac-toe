@@ -549,6 +549,7 @@ const Render = (() => {
       cell.className = "flex board__cell";
       cell.style.width = `${100 / GameBoard.getGridSize()}%`;
       cell.style.height = `${100 / GameBoard.getGridSize()}%`;
+      cell.style.fontSize = `${100 / GameBoard.getGridSize()}%`;
       cell.dataset.row = row;
       cell.dataset.column = column;
       return cell;
@@ -1053,17 +1054,18 @@ const GameController = (() => {
       Render.Windows.closeWindow();
       _reInitAll();
     }
+
     function areSelectorsSelected() {
       return selectors.every((selector) => selector.checkValidity());
     }
-  };
 
-  function _reInitAll(){
-    GameBoard.reInitCellArray();
-    Render.GameBoardDisplay.reInitCells();
-    PlayerController.reInitPlayers();    
-    Render.PlayerBar.reset();
-  }
+    function _reInitAll() {
+      GameBoard.reInitCellArray();
+      Render.GameBoardDisplay.reInitCells();
+      PlayerController.reInitPlayers();
+      Render.PlayerBar.reset();
+    }
+  };
 
   const resetAll = function () {
     GameBoard.reset();
