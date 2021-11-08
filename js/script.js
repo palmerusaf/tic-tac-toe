@@ -992,7 +992,8 @@ const GameController = (() => {
         if (isMoveWinner(row, column)) {
           PlayerController.getActivePlayer().setIsWinner(true);
           Render.Windows.winnerMessage();
-        }
+        } else if (GameBoard.areAllCellsPlayed())
+          return Render.Windows.tieMessage();
         function isMoveWinner(row, column) {
           return isRowOrColumnWin(row, column) || isDiaganolsWin(row, column);
           function isRowOrColumnWin(row, column) {
