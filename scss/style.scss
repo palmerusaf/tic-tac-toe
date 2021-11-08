@@ -1,3 +1,13 @@
+@font-face {
+  font-family: "crackman";
+  src: url("../fonts/crackman.ttf");
+}
+
+@font-face {
+  font-family: "emulogic";
+  src: url("../fonts/emulogic.ttf");
+}
+
 .flex-col {
   display: flex;
   flex-direction: column;
@@ -7,16 +17,29 @@
   display: flex;
 }
 
+body{
+  background-color: black;
+}
+
+.title{
+  align-self: center;
+  font-size: 80px;
+  padding:0;
+  margin: 0;
+  color:#e3bd3e;
+  font-family: "crackman",sans-serif;
+}
+
 .board {
   align-self: center;
   flex-wrap: wrap;
-  outline: white solid 1px;
+  outline: black solid 3px;
   width: 500px;
   height: 500px;
   margin: 40px;
   font-size:400px ;
   &__cell {
-    outline: black solid 1px;
+    outline: #1232ef solid 1px;
     justify-content: center;
     align-items: center;
     vertical-align: middle;
@@ -28,6 +51,13 @@
   padding: 2px;
   width: 90px;
   flex: 0 0 auto;
+  border: none;
+  border-radius: .5em;
+  font-family: "emulogic",sans-serif;
+  
+  color: #efca07;
+  background-color: #ca8123;
+  outline: #6f2f12;
 }
 
 .window {
@@ -38,7 +68,7 @@
   align-self: center;
   z-index: 1;
   background: rgba($color: white, $alpha: 0.7);
-  outline: black solid 1px;
+  outline: #1232ef solid 1px;
   &__title{
     text-align: center;
     text-decoration: underline;
