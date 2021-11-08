@@ -778,7 +778,6 @@ const Render = (() => {
   })();
 
   const PlayerBar = (() => {
-    const _NUM_OF_PLAYERS = PlayerController.getNumOfPlayers();
     function playerBarContainer() {
       const container = document.createElement("div");
       container.className = "flex player-bar";
@@ -802,7 +801,7 @@ const Render = (() => {
     }
     function buildFormArray() {
       let formArray = [];
-      for (let index = 0; index < _NUM_OF_PLAYERS; index++)
+      for (let index = 0; index < PlayerController.getNumOfPlayers(); index++)
         formArray.push(buildPlayerForm(index));
       return formArray;
     }
@@ -1058,6 +1057,14 @@ const GameController = (() => {
       return selectors.every((selector) => selector.checkValidity());
     }
   };
+
+  function _reInitAll(){
+    GameBoard.reInitCellArray();
+    Render.GameBoardDisplay.reInitCells();
+    PlayerController.reInitPlayers();    
+    Render.PlayerBar.reset();
+  }
+
   const resetAll = function () {
     GameBoard.reset();
     PlayerController.reset();
