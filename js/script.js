@@ -46,18 +46,27 @@ console.log(nc.setPlayersMark("O"));
 
 // GameBoard module handles all data access and initialization
 const GameBoard = (() => {
-  const _GRID_SIZE = 3;
+  let _GRID_SIZE = 3;
   let _cells = [];
 
   const getGridSize = () => _GRID_SIZE;
+
+  const setGridSize = (newSize) => (_GRID_SIZE = newSize);
 
   const _initCellArray = () => {
     for (let rowIndex = 0; rowIndex < _GRID_SIZE; rowIndex++)
       for (let columnIndex = 0; columnIndex < _GRID_SIZE; ++columnIndex)
         _cells.push(BoardCell(rowIndex, columnIndex));
-    return _cells;
   };
-  _cells = _initCellArray();
+  _initCellArray();
+
+  const reInitCellArray = () => {
+    deleteCellArray();
+    _initCellArray();
+    function deleteCellArray() {
+      _cells.length = 0;
+    }
+  };
 
   const getCell = (rowIndex, columnIndex) =>
     _cells.filter(
@@ -115,12 +124,14 @@ const GameBoard = (() => {
   const areAllCellsPlayed = () => _cells.every((cell) => cell.getIsPlayed());
   return {
     getGridSize,
+    setGridSize,
     getCell,
     isCellInBackDiagonal,
     isCellInForwardDiagonal,
     GetNeighbors,
-    reset,
     areAllCellsPlayed,
+    reInitCellArray,
+    reset,
   };
 })();
 // GameBoard Tests
@@ -306,16 +317,26 @@ const Player = () => {
 }
 
 const PlayerController = (() => {
-  const _NUM_OF_PLAYERS = 2;
+  let _NUM_OF_PLAYERS = 2;
   let _players = [];
-  const _initilizePlayers = (() => {
+  const _initPlayers = () => {
     for (let index = 0; index < _NUM_OF_PLAYERS; index++) {
       _players.push(Player());
     }
     _players[0].setIsActiveStatus(true);
-  })();
+  };
+  _initPlayers();
+
+  const reInitPlayers = () => {
+    deleteAllPlayers();
+    _initPlayers();
+    function deleteAllPlayers() {
+      return (_players.length = 0);
+    }
+  };
 
   const getNumOfPlayers = () => _NUM_OF_PLAYERS;
+  const setNumOfPlayers = (newAmount) => (_NUM_OF_PLAYERS = newAmount);
 
   const getPlayer = (playerIndex) => _players[playerIndex];
 
@@ -353,9 +374,11 @@ const PlayerController = (() => {
 
   return {
     getNumOfPlayers,
+    setNumOfPlayers,
     getPlayer,
     getActivePlayer,
     areAllPlayerAliasesSet,
+    reInitPlayers,
     reset,
     getActivePlayerIndex,
     cycleActivePlayerToNextPlayer,
@@ -503,20 +526,30 @@ const Render = (() => {
     _board.className = "flex board";
     _body.appendChild(_board);
 
-    const _initCells = (() => {
+    const _initCells = () => {
       for (let row = 0; row < GameBoard.getGridSize(); row++)
         for (let column = 0; column < GameBoard.getGridSize(); column++) {
           const cell = _buildCell(row, column);
           _addEventToCell(cell);
           _board.appendChild(cell);
         }
-    })();
+    };
+    _initCells();
+
+    const reInitCells = () => {
+      _removeAllCells();
+      _initCells();
+      function _removeAllCells() {
+        return (_board.textContent = "");
+      }
+    };
 
     function _buildCell(row, column) {
       const cell = document.createElement("div");
       cell.className = "flex board__cell";
       cell.style.width = `${100 / GameBoard.getGridSize()}%`;
       cell.style.height = `${100 / GameBoard.getGridSize()}%`;
+      cell.style.fontSize = `${100 / GameBoard.getGridSize()}%`;
       cell.dataset.row = row;
       cell.dataset.column = column;
       return cell;
@@ -545,7 +578,7 @@ const Render = (() => {
         (cell) => (cell.textContent = "")
       );
     };
-    return { displayContentToCell, reset };
+    return { displayContentToCell, reInitCells, reset };
   })();
 
   const _Buttons = (() => {
@@ -746,7 +779,6 @@ const Render = (() => {
   })();
 
   const PlayerBar = (() => {
-    const _NUM_OF_PLAYERS = PlayerController.getNumOfPlayers();
     function playerBarContainer() {
       const container = document.createElement("div");
       container.className = "flex player-bar";
@@ -770,7 +802,7 @@ const Render = (() => {
     }
     function buildFormArray() {
       let formArray = [];
-      for (let index = 0; index < _NUM_OF_PLAYERS; index++)
+      for (let index = 0; index < PlayerController.getNumOfPlayers(); index++)
         formArray.push(buildPlayerForm(index));
       return formArray;
     }
@@ -960,7 +992,8 @@ const GameController = (() => {
         if (isMoveWinner(row, column)) {
           PlayerController.getActivePlayer().setIsWinner(true);
           Render.Windows.winnerMessage();
-        }
+        } else if (GameBoard.areAllCellsPlayed())
+          return Render.Windows.tieMessage();
         function isMoveWinner(row, column) {
           return isRowOrColumnWin(row, column) || isDiaganolsWin(row, column);
           function isRowOrColumnWin(row, column) {
@@ -1013,12 +1046,28 @@ const GameController = (() => {
     }
   };
   const setNewSettings = function () {
-    if (areSelectorsSelected()) return Render.Windows.closeWindow();
+    const selectors = [...document.querySelectorAll(".menu__form select")];
+    if (areSelectorsSelected(selectors)) {
+      const newGridSize = selectors[0].value;
+      const newNumOfPlayers = selectors[1].value;
+      GameBoard.setGridSize(newGridSize);
+      PlayerController.setNumOfPlayers(newNumOfPlayers);
+      Render.Windows.closeWindow();
+      _reInitAll();
+    }
+
     function areSelectorsSelected() {
-      const selectors = [...document.querySelectorAll(".menu__form select")];
       return selectors.every((selector) => selector.checkValidity());
     }
+
+    function _reInitAll() {
+      GameBoard.reInitCellArray();
+      Render.GameBoardDisplay.reInitCells();
+      PlayerController.reInitPlayers();
+      Render.PlayerBar.reset();
+    }
   };
+
   const resetAll = function () {
     GameBoard.reset();
     PlayerController.reset();
@@ -1032,3 +1081,4 @@ const GameController = (() => {
     resetAll,
   };
 })();
+Render.Windows.displayMenu();
