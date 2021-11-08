@@ -841,6 +841,7 @@ const Render = (() => {
         selector.appendChild(buildOptionFromMark(mark))
       );
       selector.required = true;
+      selector.className="button"
       return selector;
 
       function buildPlaceHolderForMarkSelector() {
