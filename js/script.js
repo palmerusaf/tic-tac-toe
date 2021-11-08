@@ -1013,9 +1013,11 @@ const GameController = (() => {
     }
   };
   const setNewSettings = function () {
-    if (areSelectorsSelected()) return Render.Windows.closeWindow();
+    const selectors = [...document.querySelectorAll(".menu__form select")];
+    if (areSelectorsSelected(selectors)) {
+    
+    }
     function areSelectorsSelected() {
-      const selectors = [...document.querySelectorAll(".menu__form select")];
       return selectors.every((selector) => selector.checkValidity());
     }
   };
@@ -1032,3 +1034,4 @@ const GameController = (() => {
     resetAll,
   };
 })();
+Render.Windows.displayMenu();
