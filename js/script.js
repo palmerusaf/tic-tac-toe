@@ -311,12 +311,21 @@ const Player = () => {
 const PlayerController = (() => {
   let _NUM_OF_PLAYERS = 2;
   let _players = [];
-  const _initilizePlayers = (() => {
+  const _initPlayers = () => {
     for (let index = 0; index < _NUM_OF_PLAYERS; index++) {
       _players.push(Player());
     }
     _players[0].setIsActiveStatus(true);
-  })();
+  };
+  _initPlayers();
+
+  const reInitPlayers=()=>{
+    deleteAllPlayers();
+    _initPlayers();
+    function deleteAllPlayers(){
+      return _players.length=0;
+    }
+  }
 
   const getNumOfPlayers = () => _NUM_OF_PLAYERS;
   const setNumOfPlayers = (newAmount) => (_NUM_OF_PLAYERS = newAmount);
@@ -361,6 +370,7 @@ const PlayerController = (() => {
     getPlayer,
     getActivePlayer,
     areAllPlayerAliasesSet,
+    reInitPlayers,
     reset,
     getActivePlayerIndex,
     cycleActivePlayerToNextPlayer,
