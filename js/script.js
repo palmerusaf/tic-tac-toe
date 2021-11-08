@@ -508,14 +508,23 @@ const Render = (() => {
     _board.className = "flex board";
     _body.appendChild(_board);
 
-    const _initCells = (() => {
+    const _initCells = () => {
       for (let row = 0; row < GameBoard.getGridSize(); row++)
         for (let column = 0; column < GameBoard.getGridSize(); column++) {
           const cell = _buildCell(row, column);
           _addEventToCell(cell);
           _board.appendChild(cell);
         }
-    })();
+    };
+    _initCells();
+
+    const reInitCells = () => {
+      _removeAllCells();
+      _initCells();
+      function _removeAllCells() {
+        return (_board.textContent = "");
+      }
+    };
 
     function _buildCell(row, column) {
       const cell = document.createElement("div");
@@ -550,7 +559,7 @@ const Render = (() => {
         (cell) => (cell.textContent = "")
       );
     };
-    return { displayContentToCell, reset };
+    return { displayContentToCell, reInitCells, reset };
   })();
 
   const _Buttons = (() => {
@@ -1024,7 +1033,8 @@ const GameController = (() => {
       const newNumOfPlayers = selectors[1].value;
       GameBoard.setGridSize(newGridSize);
       PlayerController.setNumOfPlayers(newNumOfPlayers);
-      resetAll();
+      Render.Windows.closeWindow();
+      _reInitAll();
     }
     function areSelectorsSelected() {
       return selectors.every((selector) => selector.checkValidity());
