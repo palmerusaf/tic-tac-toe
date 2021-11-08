@@ -519,6 +519,8 @@ const Render = (() => {
     "🙈",
     "👇",
     "🎶",
+    "🍆",
+    "🍑",
   ];
 
   const GameBoardDisplay = (() => {
@@ -841,7 +843,7 @@ const Render = (() => {
         selector.appendChild(buildOptionFromMark(mark))
       );
       selector.required = true;
-      selector.className="button"
+      selector.className = "button";
       return selector;
 
       function buildPlaceHolderForMarkSelector() {
