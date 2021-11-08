@@ -30,7 +30,7 @@
   flex: 0 0 auto;
 }
 
-.msg-window {
+.window {
   position: absolute;
   margin-top: 8.5em;
   padding: 5em;
@@ -69,5 +69,25 @@
     &--active {
       transform: scale(1.5);
     }
+  }
+}
+
+.menu{
+  &__title{
+    text-align: center;
+    text-decoration: underline;
+    font-size: 24px;
+    margin-top: -2em;
+    padding-bottom: .5em;
+  }
+  &__form{
+    gap: 2px;
+    text-align: left;
+    text-decoration: 0;
+  }
+  &__form-element{
+    display: flex;
+    justify-content: space-between;
+    gap: 2em;
   }
 }
